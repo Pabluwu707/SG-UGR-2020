@@ -1,11 +1,11 @@
 
 class MyPendulo extends THREE.Object3D {
-  constructor(gui,titleGui) {
+  constructor(gui,titleGui,titleGui2) {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    this.createGUI(gui,titleGui);
+    this.createGUI(gui,titleGui,titleGui2);
 
     var matVer = new THREE.MeshPhongMaterial({color: 0x52CE26});
     var matVerD = new THREE.MeshPhongMaterial({color: 0x2E930B});
@@ -15,6 +15,8 @@ class MyPendulo extends THREE.Object3D {
     this.soporteY=0.8;
     this.medY = 1;
     this.miniY = 2;
+    this.incrementoPendulo = 0.01;
+    this.incrementoPenduloMini = 0.01;
     var superior = new THREE.BoxGeometry (0.5,this.soporteY,0.2);
     var medio = new THREE.BoxGeometry (0.5,this.medY,0.2);
     var penduloMini = new THREE.BoxGeometry (0.3,this.miniY,0.1);
@@ -42,7 +44,7 @@ class MyPendulo extends THREE.Object3D {
     this.add (this.mini);
   }
 
-  createGUI (gui,titleGui) {
+  createGUI (gui,titleGui,titleGui2) {
     // Controles para el tamaño, la orientación y la posición de la caja
     this.guiControls = new function () {
       this.escala = 1.0;
@@ -50,6 +52,10 @@ class MyPendulo extends THREE.Object3D {
       this.rotacionMini = 0.0;
       this.posicionMini = 1.0;
       this.escalaMini = 1.0;
+      this.animacion1 = false;
+      this.animacion2 = false;
+      this.velocidad1 = 0.0;
+      this.velocidad2 = 0.0;
 
       // Un botón para dejarlo todo en su posición inicial
       // Cuando se pulse se ejecutará esta función.
@@ -59,6 +65,15 @@ class MyPendulo extends THREE.Object3D {
         this.rotacionMini = 0.0;
         this.posicionMini = 10.0;
         this.escalaMini = 1.0;
+
+
+      }
+
+      this.reset2 = function () {
+        this.animacion1 = false;
+        this.animacion2 = false;
+        this.velocidad1 = 0.0;
+        this.velocidad2 = 0.0;
 
 
       }
@@ -77,6 +92,14 @@ class MyPendulo extends THREE.Object3D {
 
 
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
+
+    var folder2 = gui.addFolder (titleGui2);
+
+    folder2.add (this.guiControls, 'animacion1').name ('Péndulo 1 : ');
+    folder2.add (this.guiControls, 'velocidad1', 0.0, 2.0, 0.05).name ('Velocidad (Rads/s) : ').listen();
+    folder2.add (this.guiControls, 'animacion2').name ('Péndulo 2 : ');
+    folder2.add (this.guiControls, 'velocidad2', 0.0, 2.0, 0.05).name ('Velocidad (Rads/s) : ').listen();
+    folder2.add (this.guiControls, 'reset2').name ('[ Reset ]');
   }
 
   update () {
@@ -92,8 +115,33 @@ class MyPendulo extends THREE.Object3D {
     this.inf.position.y = this.med.position.y*2;
     this.mini.position.y = -(this.soporteY/2 + this.medY*this.guiControls.escala*this.guiControls.posicionMini/100+((this.miniY*this.guiControls.escalaMini-this.miniY)/10));
     this.sop2.position.y = -(this.soporteY/2 + this.medY*this.guiControls.escala*this.guiControls.posicionMini/100);
-    this.mini.rotation.z = this.guiControls.rotacionMini;
-    this.rotation.z = this.guiControls.rotacion;
+
+
+
+    if(this.guiControls.animacion1){
+      this.rotation.z += this.incrementoPendulo;
+      if(this.rotation.z >= 0.8){
+        this.incrementoPendulo = -0.01;
+      }
+      if(this.rotation.z <= -0.8){
+        this.incrementoPendulo = 0.01;
+      }
+    }
+    else{
+      this.rotation.z = this.guiControls.rotacion;
+    }
+    if(this.guiControls.animacion2){
+      this.mini.rotation.z+=this.incrementoPenduloMini;
+      if(this.mini.rotation.z >= (0.8)){
+        this.incrementoPenduloMini = -0.01;
+      }
+      if(this.mini.rotation.z <= (-0.8)){
+        this.incrementoPenduloMini = 0.01;
+      }
+    }
+    else{
+      this.mini.rotation.z = this.guiControls.rotacionMini;
+    }
 
 }
 }

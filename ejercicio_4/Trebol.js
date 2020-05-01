@@ -12,8 +12,8 @@ class MyTrebol extends THREE.Object3D {
     this.points.push (new THREE.Vector3 (0.04,0.6, 0.0));
 
     var geometryB = new THREE.LatheGeometry(this.points);
+    geometryB.translate(0,-1,0);
     this.base = new THREE.Mesh (geometryB, unMaterial);
-    this.add(this.base);
     this.base.position.z=0.05;
 
 
@@ -27,22 +27,26 @@ class MyTrebol extends THREE.Object3D {
     shape.lineTo(0,1.3);
     var opciones = { amount: 0.1,bevelEnabled: true, bevelSegments: 1, steps: 1, bevelSize: 0.1, bevelThickness:0.1};
     var geometry = new THREE.ExtrudeBufferGeometry( shape, opciones );
+    geometry.translate(0,-1,0);
     this.trebol = new THREE.Mesh (geometry, unMaterial);
     this.add (this.trebol);
-
-    // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
+    this.cd = new THREE.Object3D();
+    this.cd.position.x = 1.5;
+    this.cd.add(this.trebol);
+    this.cd.add(this.base);
+    this.e = new THREE.Object3D();
+    this.e.add(this.cd);
+    this.add (this.e);
   }
 
 
-  update () {
-    // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
-    // Primero, el escalado
-    // Segundo, la rotación en Z
-    // Después, la rotación en Y
-    // Luego, la rotación en X
-    // Y por último la traslación
+  update (animacion) {
+    if(animacion){
+      this.trebol.rotation.y += 0.01;
+      this.base.rotation.y += 0.01;
+      this.cd.rotation.z -= 0.01;
+      this.e.rotation.z += 0.01;
+    }
 
   }
 }

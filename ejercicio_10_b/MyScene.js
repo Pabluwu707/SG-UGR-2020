@@ -34,27 +34,9 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.trebol = new MyTrebol();
-    this.pica = new MyPicas();
-    this.diamante = new MyDiamante();
-    this.corazon = new MyCorazon();
-    this.corazonEx = new MyCorazonEx();
-    this.trebolEx = new MyTrebolEx();
-    this.add (this.trebol);
-    //this.trebol.position.y = -1.5;
-    this.add (this.pica);
-    //this.pica.position.y = 1.5;
-    this.add (this.diamante);
-    //this.diamante.position.y = 1.5;
-    this.add (this.corazon);
-    //this.corazon.position.y = -1.5;
-    this.add (this.corazonEx);
-    this.corazonEx.position.x = -4.2;
-    this.corazonEx.position.y = -2.5;
-    this.add (this.trebolEx);
-    this.trebolEx.position.x = 4.2;
-    this.trebolEx.position.y= -2.5;
+    this.bola = new MyBolaSaltarina();
 
+    this.add(this.bola);
 
   }
 
@@ -113,7 +95,7 @@ class MyScene extends THREE.Scene {
       // En el contexto de una función   this   alude a la función
       this.lightIntensity = 0.5;
       this.axisOnOff = true;
-      this.animacion = false;
+      this.radio = 10.0;
     }
 
     // Se crea una sección para los controles de esta clase
@@ -125,7 +107,7 @@ class MyScene extends THREE.Scene {
     // Y otro para mostrar u ocultar los ejes
     folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
 
-    folder.add (this.guiControls, 'animacion').name ('Animacion : ');
+    folder.add (this.guiControls, 'radio', 2, 20, 0.1).name('Radio : ');
 
     return gui;
   }
@@ -207,12 +189,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     // Se actualiza el resto del modelo
-    this.diamante.update(this.guiControls.animacion);
-    this.corazon.update(this.guiControls.animacion);
-    this.pica.update(this.guiControls.animacion);
-    this.trebol.update(this.guiControls.animacion);
-    this.trebolEx.update();
-    this.corazonEx.update();
+    this.bola.update(this.guiControls.radio);
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
