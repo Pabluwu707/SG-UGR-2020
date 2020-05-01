@@ -28,10 +28,10 @@ class MyRecorrido extends THREE.Object3D {
     this.add(this.coche);
 
 
-    var origen1 = { x: 0, y: 2};
-    var destino1 = { x: 0, y: 3};
-    var origen2 = { x: 0, y: 2};
-    var destino2 = { x: 0, y: 3};
+    var origen1 = { x: 0, y: 0};
+    var destino1 = { x: 0, y: 1};
+    var origen2 = { x: 0, y: 0};
+    var destino2 = { x: 0, y: 1};
 
     var animacion1 = new TWEEN.Tween(origen1).to(destino1,4000).easing(TWEEN.Easing.Quadratic.InOut);
     var animacion2 = new TWEEN.Tween(origen2).to(destino2,8000).easing(TWEEN.Easing.Quadratic.InOut);
@@ -40,17 +40,17 @@ class MyRecorrido extends THREE.Object3D {
     var that = this;
     animacion1.onUpdate(function(){
 
-      var posicion = spline1.getPointAt(origen1.y-2);
+      var posicion = spline1.getPointAt(origen1.y);
       that.coche.position.copy(posicion);
-      var tangente = spline1.getTangentAt(origen1.y-2);
+      var tangente = spline1.getTangentAt(origen1.y);
       posicion.add(tangente);
       that.coche.lookAt(posicion);
     });
 
     animacion2.onUpdate(function(){
-      var posicion = spline2.getPointAt(origen2.y-2);
+      var posicion = spline2.getPointAt(origen2.y);
       that.coche.position.copy(posicion);
-      var tangente = spline2.getTangentAt(origen2.y-2);
+      var tangente = spline2.getTangentAt(origen2.y);
       posicion.add(tangente);
       that.coche.lookAt(posicion);
     });
