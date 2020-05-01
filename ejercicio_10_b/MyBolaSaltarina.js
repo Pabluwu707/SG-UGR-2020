@@ -3,13 +3,12 @@ class MyBolaSaltarina extends THREE.Object3D {
   constructor() {
     super();
 
-    this.bolay = 0.2;
     var origen ={x:0, y: -4};
     var destino ={x:0, y: 4};
     var textura = new THREE.MeshNormalMaterial();
     var texturaCil = new THREE.MeshNormalMaterial({opacity:0.35,transparent:true});
     var geoBola = new THREE.SphereGeometry( 1, 20, 20 );
-    var geoCilindro = new THREE.CylinderGeometry (10,10,10,20);
+    var geoCilindro = new THREE.CylinderGeometry (1,1,10,20);
     geoBola.translate(11,0,0)
 
     this.bola = new THREE.Mesh (geoBola, textura);
@@ -31,8 +30,9 @@ class MyBolaSaltarina extends THREE.Object3D {
 
 
   update (radio) {
-    this.cilindro.geometry = new THREE.CylinderGeometry (radio,radio,10,20);
+    this.cilindro.scale.set(radio,1,radio);
     this.bola.rotation.y += 0.05;
+    this.bola.position.x = radio;
 
 
     TWEEN.update();

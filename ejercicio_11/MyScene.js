@@ -34,9 +34,9 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.sistema = new MyBolaElipse();
+    this.recorrido = new MyRecorrido();
 
-    this.add(this.sistema);
+    this.add(this.recorrido);
 
   }
 
@@ -186,7 +186,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     // Se actualiza el resto del modelo
-    this.sistema.update();
+    this.recorrido.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
