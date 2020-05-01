@@ -95,6 +95,7 @@ class MyScene extends THREE.Scene {
       // En el contexto de una función   this   alude a la función
       this.lightIntensity = 0.5;
       this.axisOnOff = true;
+      this.radio = 1;
     }
 
     // Se crea una sección para los controles de esta clase
@@ -105,6 +106,8 @@ class MyScene extends THREE.Scene {
 
     // Y otro para mostrar u ocultar los ejes
     folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
+
+    folder.add (this.guiControls, 'radio', 1 ,3,0.1).name ('Extension : ');
 
     return gui;
   }
@@ -186,7 +189,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     // Se actualiza el resto del modelo
-    this.sistema.update();
+    this.sistema.update(this.guiControls.radio);
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

@@ -5,15 +5,20 @@ class MyBolaElipse extends THREE.Object3D {
 
     var textura = new THREE.MeshNormalMaterial();
     var texturaCil = new THREE.MeshNormalMaterial({opacity:0.35,transparent:true});
-    var geoBola = new THREE.SphereGeometry( 1, 20, 20 );
-    var geoCilindro = new THREE.CylinderGeometry (1,1,10,20);
+    var geoBola = new THREE.SphereGeometry( 0.5, 20, 20 );
+    var geoCilindro = new THREE.CylinderGeometry (3,3,1.5,20);
+
+    this.bola = new THREE.Mesh (geoBola, textura);
+    this.cilindro = new THREE.Mesh (geoCilindro, texturaCil);
+
+    this.add (this.bola);
+    this.add (this.cilindro);
+
   }
 
 
-  update () {
-    /*this.rotation.y += 0.01;
-    this.satelite3.rotation.y += 0.01;
-    this.satelite2.rotation.y += -0.01;*/
+  update (radio) {
+    this.cilindro.scale.set(1,1,radio);
 
 }
 }
