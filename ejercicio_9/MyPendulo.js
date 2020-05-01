@@ -121,22 +121,24 @@ class MyPendulo extends THREE.Object3D {
     if(this.guiControls.animacion1){
       this.rotation.z += this.guiControls.velocidad1 * segundosTranscurridos * this.incrementoPendulo;
       if(this.rotation.z >= 0.8){
-        this.incrementoPendulo = -this.incrementoPendulo;
+        this.incrementoPendulo = -1;
       }
       if(this.rotation.z <= -0.8){
-        this.incrementoPendulo = -this.incrementoPendulo;
+        this.incrementoPendulo = 1;
       }
     }
     else{
       this.rotation.z = this.guiControls.rotacion;
     }
+
+
     if(this.guiControls.animacion2){
       this.mini.rotation.z+= this.guiControls.velocidad2 * segundosTranscurridos * this.incrementoPenduloMini;
-      if(this.mini.rotation.z >= (0.8)){
-        this.incrementoPenduloMini = -this.incrementoPenduloMini;
+      if(this.mini.rotation.z > (0.8)){
+        this.incrementoPenduloMini = -1;
       }
-      if(this.mini.rotation.z <= (-0.8)){
-        this.incrementoPenduloMini = -this.incrementoPenduloMini;
+      if(this.mini.rotation.z < (-0.8)){
+        this.incrementoPenduloMini = 1;
       }
     }
     else{

@@ -46,10 +46,8 @@ class MyScene extends THREE.Scene {
     this.add (this.corazon);
     this.add (this.corazonEx);
     this.corazonEx.position.x = -4.2;
-    this.corazonEx.position.y = -2.5;
     this.add (this.trebolEx);
     this.trebolEx.position.x = 4.2;
-    this.trebolEx.position.y= -2.5;
 
 
   }
@@ -207,8 +205,8 @@ class MyScene extends THREE.Scene {
     this.corazon.update(this.guiControls.animacion);
     this.pica.update(this.guiControls.animacion);
     this.trebol.update(this.guiControls.animacion);
-    this.trebolEx.update();
-    this.corazonEx.update();
+    this.trebolEx.update(this.guiControls.animacion);
+    this.corazonEx.update(this.guiControls.animacion);
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

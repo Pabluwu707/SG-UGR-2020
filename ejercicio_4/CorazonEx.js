@@ -16,10 +16,13 @@ class MyCorazonEx extends THREE.Object3D {
 
     var pts = [];
     pts.push (new THREE.Vector3 (0.0, 0.0, 0.0));
+    pts.push (new THREE.Vector3 (0.5, 3.0, 0.5));
+    pts.push (new THREE.Vector3 (-0.5, 9.0, -0.5));
     pts.push (new THREE.Vector3 (0.0, 12.0, 0.0));
     var path = new THREE.CatmullRomCurve3(pts);
     var options ={steps:50, curveSegments: 4, extrudePath:path};
     var geometry = new THREE.ExtrudeGeometry(shape, options);
+    geometry.translate(0,-6,0);
     var unMaterial = new THREE.MeshNormalMaterial();
     this.corazonex = new THREE.Mesh (geometry, unMaterial);
     this.add (this.corazonex);
@@ -30,13 +33,10 @@ class MyCorazonEx extends THREE.Object3D {
     // subimos el Mesh de la caja la mitad de su altura
   }
 
-  update () {
-    // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
-    // Primero, el escalado
-    // Segundo, la rotación en Z
-    // Después, la rotación en Y
-    // Luego, la rotación en X
-    // Y por último la traslación
+  update (animacion) {
+    if(animacion){
+      this.corazonex.rotation.x += 0.01;
+    }
 
   }
 }
