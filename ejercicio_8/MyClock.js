@@ -34,6 +34,8 @@ class MyClock extends THREE.Object3D {
     // Unimos las partes del Reloj
     this.add(this.base);
     this.add(this.agujaPosicionada);
+
+    this.tiempoAnterior = Date.now();
   }
 
   createGUI (gui,titleGui) {
@@ -68,7 +70,10 @@ class MyClock extends THREE.Object3D {
     // Después, la rotación en Y
     // Luego, la rotación en X
     // Y por último la traslación
-    this.agujaPosicionada.rotation.y -= this.guiControls.velocidad * 0.01;
+    var tiempoActual = Date.now();
+    var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
+    this.agujaPosicionada.rotation.y -= this.guiControls.velocidad * segundosTranscurridos;
+    this.tiempoAnterior = tiempoActual;
 
   }
 }
