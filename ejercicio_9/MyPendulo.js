@@ -15,8 +15,8 @@ class MyPendulo extends THREE.Object3D {
     this.soporteY=0.8;
     this.medY = 1;
     this.miniY = 2;
-    this.incrementoPendulo = 0.01;
-    this.incrementoPenduloMini = 0.01;
+    this.incrementoPendulo = 1;
+    this.incrementoPenduloMini = 1;
     var superior = new THREE.BoxGeometry (0.5,this.soporteY,0.2);
     var medio = new THREE.BoxGeometry (0.5,this.medY,0.2);
     var penduloMini = new THREE.BoxGeometry (0.3,this.miniY,0.1);
@@ -42,6 +42,8 @@ class MyPendulo extends THREE.Object3D {
     this.add (this.med);
     this.add (this.sop2);
     this.add (this.mini);
+
+    this.tiempoAnterior = Date.now();
   }
 
   createGUI (gui,titleGui,titleGui2) {
@@ -103,12 +105,7 @@ class MyPendulo extends THREE.Object3D {
   }
 
   update () {
-    // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
-    // Primero, el escalado
-    // Segundo, la rotación en Z
-    // Después, la rotación en Y
-    // Luego, la rotación en X
-    // Y por último la traslación
+
     this.med.scale.y = this.guiControls.escala;
     this.mini.scale.y = this.guiControls.escalaMini;
     this.med.position.y =-(this.soporteY/2 + this.medY*this.guiControls.escala/2);
@@ -118,30 +115,35 @@ class MyPendulo extends THREE.Object3D {
 
 
 
+    var tiempoActual = Date.now();
+    var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
+
     if(this.guiControls.animacion1){
-      this.rotation.z += this.incrementoPendulo;
+      this.rotation.z += this.guiControls.velocidad1 * segundosTranscurridos * this.incrementoPendulo;
       if(this.rotation.z >= 0.8){
-        this.incrementoPendulo = -0.01;
+        this.incrementoPendulo = -this.incrementoPendulo;
       }
       if(this.rotation.z <= -0.8){
-        this.incrementoPendulo = 0.01;
+        this.incrementoPendulo = -this.incrementoPendulo;
       }
     }
     else{
       this.rotation.z = this.guiControls.rotacion;
     }
     if(this.guiControls.animacion2){
-      this.mini.rotation.z+=this.incrementoPenduloMini;
+      this.mini.rotation.z+= this.guiControls.velocidad2 * segundosTranscurridos * this.incrementoPenduloMini;
       if(this.mini.rotation.z >= (0.8)){
-        this.incrementoPenduloMini = -0.01;
+        this.incrementoPenduloMini = -this.incrementoPenduloMini;
       }
       if(this.mini.rotation.z <= (-0.8)){
-        this.incrementoPenduloMini = 0.01;
+        this.incrementoPenduloMini = -this.incrementoPenduloMini;
       }
     }
     else{
       this.mini.rotation.z = this.guiControls.rotacionMini;
     }
+
+    this.tiempoAnterior = tiempoActual;
 
 }
 }
