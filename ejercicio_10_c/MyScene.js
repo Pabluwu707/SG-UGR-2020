@@ -34,7 +34,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.sistema = new MyBolaElipse();
+    this.sistema = new MyBolaElipse(this.gui, "Control Elipse");
 
     this.add(this.sistema);
 
@@ -95,7 +95,6 @@ class MyScene extends THREE.Scene {
       // En el contexto de una función   this   alude a la función
       this.lightIntensity = 0.5;
       this.axisOnOff = true;
-      this.radio = 1;
     }
 
     // Se crea una sección para los controles de esta clase
@@ -106,8 +105,6 @@ class MyScene extends THREE.Scene {
 
     // Y otro para mostrar u ocultar los ejes
     folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
-
-    folder.add (this.guiControls, 'radio', 1 ,3,0.1).name ('Extension : ');
 
     return gui;
   }
@@ -189,7 +186,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     // Se actualiza el resto del modelo
-    this.sistema.update(this.guiControls.radio);
+    this.sistema.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
