@@ -22,15 +22,14 @@ class MySistemaSolar extends THREE.Object3D {
     this.satelite1.position.x = 3;
     this.satelite2.position.x = 6;
     this.satelite3.position.x = 9;
-    this.satelite1.rotation.y = Math.PI;
-    this.satelite3.rotation.y = Math.PI;
   }
 
 
   update () {
-    /*this.rotation.y += 0.01;
-    this.satelite3.rotation.y += 0.01;
-    this.satelite2.rotation.y += -0.01;*/
+    this.rotation.y += 0.01;
+    //this.satelite3.rotation.y += 0.01;
+    //this.satelite2.rotation.y += -0.01;
+    this.satelite1.lookAt(5,5,0);
 
 }
 }

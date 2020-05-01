@@ -23,6 +23,7 @@ class MyCorazon extends THREE.Object3D {
     this.add (this.corazon);
     this.cd = new THREE.Object3D();
     this.cd.position.x = 1.5;
+    this.cd.position.y = 1.5;
     this.cd.add(this.corazon);
     this.e = new THREE.Object3D();
     this.e.add(this.cd);

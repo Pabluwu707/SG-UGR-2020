@@ -41,13 +41,9 @@ class MyScene extends THREE.Scene {
     this.corazonEx = new MyCorazonEx();
     this.trebolEx = new MyTrebolEx();
     this.add (this.trebol);
-    //this.trebol.position.y = -1.5;
     this.add (this.pica);
-    //this.pica.position.y = 1.5;
     this.add (this.diamante);
-    //this.diamante.position.y = 1.5;
     this.add (this.corazon);
-    //this.corazon.position.y = -1.5;
     this.add (this.corazonEx);
     this.corazonEx.position.x = -4.2;
     this.corazonEx.position.y = -2.5;

@@ -14,7 +14,8 @@ class MyDiamante extends THREE.Object3D {
     var unMaterial = new THREE.MeshNormalMaterial();
     this.diamante = new THREE.Mesh (geometry, unMaterial);
     this.cd = new THREE.Object3D();
-    this.cd.position.x = 1.5;
+    this.cd.position.x = -1.5;
+    this.cd.position.y = -1.5;
     this.cd.add(this.diamante);
     this.e = new THREE.Object3D();
     this.e.add(this.cd);

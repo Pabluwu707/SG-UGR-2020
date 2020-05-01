@@ -31,7 +31,8 @@ class MyTrebol extends THREE.Object3D {
     this.trebol = new THREE.Mesh (geometry, unMaterial);
     this.add (this.trebol);
     this.cd = new THREE.Object3D();
-    this.cd.position.x = 1.5;
+    this.cd.position.x = -1.5;
+    this.cd.position.y = 1.5;
     this.cd.add(this.trebol);
     this.cd.add(this.base);
     this.e = new THREE.Object3D();

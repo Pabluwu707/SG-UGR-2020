@@ -33,9 +33,9 @@ class MyPicas extends THREE.Object3D {
     this.pica = new THREE.Mesh (geometry, unMaterial);
     this.pica.scale.set(0.83,0.83,0.83);
     this.pica.rotation.set (0,0,3.14159);
-    //this.pica.position.y = 2;
     this.cd = new THREE.Object3D();
     this.cd.position.x = 1.5;
+    this.cd.position.y = -1.5;
     this.cd.add(this.pica);
     this.cd.add(this.base);
     this.e = new THREE.Object3D();
