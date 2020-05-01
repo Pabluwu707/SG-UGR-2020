@@ -23,56 +23,21 @@ class MyScene extends THREE.Scene {
     // Tendremos una cámara con un control de movimiento con el ratón
     this.createCamera ();
 
+    // Un suelo
+    this.createGround ();
 
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
-    this.axisC = new THREE.AxesHelper (5);
-    this.axisCi = new THREE.AxesHelper (5);
-    this.axisT = new THREE.AxesHelper (5);
-    this.axisS = new THREE.AxesHelper (5);
-    this.axisI = new THREE.AxesHelper (5);
-    this.add (this.axis);
-    this.add (this.axisC);
-    this.axisC.position.x = -10;
-    this.add (this.axisCi);
-    this.axisCi.position.x = 10;
-    this.add (this.axisT);
-    this.axisT.position.x = -10;
-    this.axisT.position.y = 10;
-    this.add (this.axisS);
-    this.axisS.position.y = 10;
-    this.add (this.axisI);
-    this.axisI.position.x = 10;
-    this.axisI.position.y = 10;
+    this.add (this.axis)
 
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.caja = new MyBox(this.gui, "Controles de la Caja");
-    this.add (this.caja);
-
-    this.cono = new MyCone(this.gui, "Controles del Cono");
-    this.cono.position.x = -10;
-    this.add (this.cono);
-
-    this.cilindro = new MyCylinder(this.gui, "Controles del Cilindro");
-    this.cilindro.position.x = 10;
-    this.add (this.cilindro);
-
-    this.ico = new MyIco(this.gui, "Controles de Icosaedro");
-    this.ico.position.x = 10;
-    this.ico.position.y = 10;
-    this.add (this.ico);
-
-    this.toro = new MyToro(this.gui, "Controles de Toroide");
-    this.toro.position.x = -10;
-    this.toro.position.y = 10;
-    this.add (this.toro);
-
-    this.sphere = new MySphere(this.gui, "Controles de Esfera");
-    this.sphere.position.y = 10;
-    this.add (this.sphere);
+    this.modeloCoche = new MyModel('../models/porsche911/Porsche_911_GT2.obj', '../models/porsche911/911.mtl', this.gui, "Controles del modelo");
+    this.modeloCoche.scale.set(5.0,5.0,5.0);
+    this.modeloCoche.position.y = 3.0;
+    this.add (this.modeloCoche);
   }
 
   createCamera () {
@@ -221,13 +186,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
 
     // Se actualiza el resto del modelo
-    this.caja.update();
-    this.cono.update();
-    this.cilindro.update();
-    this.ico.update();
-    this.sphere.update();
-    this.toro.update();
-
+    this.modeloCoche.update();
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

@@ -19,9 +19,6 @@ class MyIco extends THREE.Object3D {
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
-
-    this.ico.position.x = 10;
-    this.ico.position.y = 10;
   }
 
   createGUI (gui,titleGui) {
@@ -41,14 +38,19 @@ class MyIco extends THREE.Object3D {
     }
 
     // Se crea una sección para los controles de la caja
+    var objeto = this;
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').listen();
-    folder.add (this.guiControls, 'sub', 0.0, 3.0, 1.0).name ('Subdivision : ').listen();
+    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'sub', 0.0, 3.0, 1.0).name ('Subdivision : ').onChange(function(){objeto.updateGeometry()});
 
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
+  }
+
+  updateGeometry () {
+    this.ico.geometry = new THREE.IcosahedronGeometry(this.guiControls.radius,this.guiControls.sub);
   }
 
   update () {
@@ -58,7 +60,6 @@ class MyIco extends THREE.Object3D {
     // Después, la rotación en Y
     // Luego, la rotación en X
     // Y por último la traslación
-    this.ico.geometry = new THREE.IcosahedronGeometry(this.guiControls.radius,this.guiControls.sub);
     this.ico.rotation.z += 0.01;
     this.ico.rotation.y += 0.01;
     this.ico.rotation.x += 0.01;

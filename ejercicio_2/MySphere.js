@@ -20,7 +20,6 @@ class MySphere extends THREE.Object3D {
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
-    this.sphere.position.y = 10;
   }
 
   createGUI (gui,titleGui) {
@@ -42,16 +41,21 @@ class MySphere extends THREE.Object3D {
     }
 
     // Se crea una sección para los controles de la caja
+    var objeto = this;
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').listen();
-    folder.add (this.guiControls, 'ecuator', 3.0, 20.0, 1.0).name ('Res. Ecuador : ').listen();
-    folder.add (this.guiControls, 'meridian', 3.0, 20.0, 1.0).name ('Res. Meridiano : ').listen();
+    folder.add (this.guiControls, 'radius', 0.1, 5.0, 0.1).name ('Radio : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'ecuator', 3.0, 20.0, 1.0).name ('Res. Ecuador : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'meridian', 3.0, 20.0, 1.0).name ('Res. Meridiano : ').onChange(function(){objeto.updateGeometry()});
 
 
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
+  }
+
+  updateGeometry() {
+     this.sphere.geometry = new THREE.SphereGeometry(this.guiControls.radius,this.guiControls.ecuator,this.guiControls.meridian);
   }
 
   update () {
@@ -62,7 +66,6 @@ class MySphere extends THREE.Object3D {
     // Luego, la rotación en X
     // Y por último la traslación
 
-    this.sphere.geometry = new THREE.SphereGeometry(this.guiControls.radius,this.guiControls.ecuator,this.guiControls.meridian);
     this.sphere.rotation.z += 0.01;
     this.sphere.rotation.y += 0.01;
     this.sphere.rotation.x += 0.01;

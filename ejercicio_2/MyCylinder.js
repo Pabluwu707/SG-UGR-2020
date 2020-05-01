@@ -19,7 +19,6 @@ class MyCylinder extends THREE.Object3D {
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
-    this.cylinder.position.x = 10;
 
   }
 
@@ -44,17 +43,22 @@ class MyCylinder extends THREE.Object3D {
     }
 
     // Se crea una sección para los controles de la caja
+    var objeto = this;
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
     // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-    folder.add (this.guiControls, 'radius1', 0.1, 5.0, 0.1).name ('Radio Superior : ').listen();
-    folder.add (this.guiControls, 'radius2', 0.1, 5.0, 0.1).name ('Radio Inferior : ').listen();
-    folder.add (this.guiControls, 'height', 0.1, 5.0, 0.1).name ('Altura : ').listen();
-    folder.add (this.guiControls, 'resolution', 3, 20, 1.0).name ('Resolucion : ').listen();
+    folder.add (this.guiControls, 'radius1', 0.1, 5.0, 0.1).name ('Radio Superior : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'radius2', 0.1, 5.0, 0.1).name ('Radio Inferior : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'height', 0.1, 5.0, 0.1).name ('Altura : ').onChange(function(){objeto.updateGeometry()});
+    folder.add (this.guiControls, 'resolution', 3, 20, 1.0).name ('Resolucion : ').onChange(function(){objeto.updateGeometry()});
 
 
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
+  }
+
+  updateGeometry() {
+     this.cylinder.geometry = new THREE.CylinderGeometry (this.guiControls.radius1,this.guiControls.radius2,this.guiControls.height,this.guiControls.resolution);
   }
 
   update () {
@@ -64,7 +68,6 @@ class MyCylinder extends THREE.Object3D {
     // Después, la rotación en Y
     // Luego, la rotación en X
     // Y por último la
-    this.cylinder.geometry = new THREE.CylinderGeometry (this.guiControls.radius1,this.guiControls.radius2,this.guiControls.height,this.guiControls.resolution);
     this.cylinder.rotation.z += 0.01;
     this.cylinder.rotation.y += 0.01;
     this.cylinder.rotation.x += 0.01;
