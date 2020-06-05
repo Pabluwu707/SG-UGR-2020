@@ -46,13 +46,19 @@ class MyModel extends THREE.Object3D {
        }
     );
 
+    this.userData = this;
+
+    this.left = false;
+    this.right = false;
+    this.forward = false;
+    this.backward = false;
 
   }
 
   createGUI (gui,titleGui) {
     // Controles
     this.guiControls = new function () {
-      this.giroContinuo = true;
+      this.giroContinuo = false;
     }
 
     // Se crea una sección para los controles
@@ -66,5 +72,16 @@ class MyModel extends THREE.Object3D {
     if (this.guiControls.giroContinuo)
       this.rotation.y += 0.006;
 
+    if (this.left)
+      this.position.x += 0.1;
+
+    if (this.right)
+      this.position.x -= 0.1;
+
+    if (this.forward)
+      this.position.z += 0.5;
+
+    if (this.backward)
+      this.position.z -= 0.2;
   }
 }

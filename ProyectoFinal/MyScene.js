@@ -29,12 +29,27 @@ class MyScene extends THREE.Scene {
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
     this.add (this.axis);
-    this.caja = new MyModel(this.gui, "Controles de la Caja");
-    this.caja.position.y = 5;
-    this.caja.position.z = -220;
-    this.add (this.caja);
+
+    // Objeto jugador
+    this.motoJugador = new MyJugador(this.gui, "Controles del modelo");
+    this.motoJugador.position.y = 5;
+    this.motoJugador.position.z = -220;
+    this.add (this.motoJugador);
 
 
+    // Objeto obstaculo (mas adelante se crearan diversas copias, por ahora uno para hacer pruebas)
+    this.obstaculo = new MyObstaculo(this.gui, "Controles obstaculo");
+    this.obstaculo.position.y = 5;
+    this.obstaculo.position.z = -200;
+    this.add (this.obstaculo);
+
+
+    // Inicialización del raycaster usado para detectar colisiones frontales
+    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), -10, 3 );
+
+    // Incluimos en un array los objetos visualizados por el raycaster
+    this.obstaculos = [];
+    this.obstaculos.push(this.obstaculo.getMesh());
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
@@ -59,7 +74,7 @@ class MyScene extends THREE.Scene {
   createGround () {
     // El suelo es un Mesh, necesita una geometría y un material.
 
-    // La geometría es una caja con muy poca altura
+    // La geometría es una motoJugador con muy poca altura
     var geometryGround = new THREE.BoxGeometry (40,1,500);
 
     // El material se hará con una textura de madera
@@ -165,16 +180,20 @@ class MyScene extends THREE.Scene {
     var key = event.which || event.keyCode;
     switch (key) {
       case 37 : // Cursor a la izquierda
-        this.caja.left = true;
+        this.motoJugador.left = true;
+        //console.log("left");
         break;
       case 38 : // Cursor arriba
-        this.caja.forward = true;
+        this.motoJugador.forward = true;
+        //console.log("up");
         break;
       case 39 : // Cursor a la derecha
-        this.caja.right = true;
+        this.motoJugador.right = true;
+        //console.log("right");
         break;
       case 40 : // Cursor abajo
-        this.caja.backward = true;
+        this.motoJugador.backward = true;
+        //console.log("down");
         break;
     }
   }
@@ -183,16 +202,16 @@ class MyScene extends THREE.Scene {
     var key = event.which || event.keyCode;
     switch (key) {
       case 37 : // Cursor a la izquierda
-        this.caja.left = false;
+        this.motoJugador.left = false;
         break;
       case 38 : // Cursor arriba
-        this.caja.forward = false;
+        this.motoJugador.forward = false;
         break;
       case 39 : // Cursor a la derecha
-        this.caja.right = false;
+        this.motoJugador.right = false;
         break;
       case 40 : // Cursor abajo
-        this.caja.backward = false;
+        this.motoJugador.backward = false;
         break;
     }
   }
@@ -216,8 +235,36 @@ class MyScene extends THREE.Scene {
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
-    this.caja.update();
-    this.camera.position.z += 0.8;
+    //this.octree.update();
+    this.motoJugador.update();
+    this.obstaculo.update();
+
+    //this.camera.position.z += 0.5;
+
+    // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
+    this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
+    var intersecciones = this.raycasterFrontal.intersectObjects( this.obstaculos );
+
+    if (intersecciones.length > 0) {
+      console.log("Colision");
+    }
+
+    /*
+    // OCTREE
+    this.octreeObjects = this.octree.search(this.motoJugador.position, 0.00001, true);
+
+    if (this.octreeObjects.length > 1){
+      console.log("Colision");
+    }
+    // Guardar TowerBall cercanas
+    let tbs = [];
+    for(let tb of this.octreeObjects) {
+      console.log(tb);
+        tbs.push(tb.object.userData);
+    }
+    console.log(tbs.length);
+    */
+
   }
 }
 
