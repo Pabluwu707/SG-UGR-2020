@@ -2,7 +2,7 @@ class MyToro extends THREE.Object3D {
   constructor(gui,titleGui) {
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la caja
+    // Se crea la parte de la interfaz que corresponde al toroide
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
 
@@ -17,13 +17,11 @@ class MyToro extends THREE.Object3D {
     this.add (this.toro);
 
     // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
 
   }
 
   createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para el tamaño, la orientación y la posición del toroide
     this.guiControls = new function () {
       this.radiusP = 1.0;
       this.radiusT = 0.2;
@@ -40,7 +38,7 @@ class MyToro extends THREE.Object3D {
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles del toroide
     var objeto = this;
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz

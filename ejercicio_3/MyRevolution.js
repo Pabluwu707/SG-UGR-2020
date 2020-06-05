@@ -28,14 +28,10 @@ class MyRevolution extends THREE.Object3D {
     var geometry = new THREE.LatheGeometry(this.points,3,0,1);
     this.peon = new THREE.Mesh (geometry, unMaterial);
     this.add (this.peon);
-
-    // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
   }
 
   createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para la orientación y la resoluciçon
     this.guiControls = new function () {
       this.resolution = 3.0;
       this.angle = 1.0
@@ -51,10 +47,9 @@ class MyRevolution extends THREE.Object3D {
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
     folder.add (this.guiControls, 'resolution', 3.0, 20.0, 1.0).name ('Resolucion : ').listen();
     folder.add (this.guiControls, 'angle', 0.1, 6.3, 0.1).name ('Angulo : ').listen();

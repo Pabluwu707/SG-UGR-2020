@@ -21,17 +21,13 @@ class MyCorazon extends THREE.Object3D {
     var unMaterial = new THREE.MeshNormalMaterial();
     this.corazon = new THREE.Mesh (geometry, unMaterial);
     this.add (this.corazon);
-    this.cd = new THREE.Object3D();
-    this.cd.position.x = 1.5;
-    this.cd.position.y = 1.5;
-    this.cd.add(this.corazon);
-    this.e = new THREE.Object3D();
-    this.e.add(this.cd);
-    this.add (this.e);
-
-    // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
+    this.nodoDesplazado = new THREE.Object3D();
+    this.nodoDesplazado.position.x = 1.5;
+    this.nodoDesplazado.position.y = 1.5;
+    this.nodoDesplazado.add(this.corazon);
+    this.nodoRotado = new THREE.Object3D();
+    this.nodoRotado.add(this.nodoDesplazado);
+    this.add (this.nodoRotado);
   }
 
 
@@ -39,8 +35,8 @@ class MyCorazon extends THREE.Object3D {
   update (animacion) {
     if(animacion){
       this.corazon.rotation.y += 0.01;
-      this.cd.rotation.z -= 0.01;
-      this.e.rotation.z += 0.01;
+      this.nodoDesplazado.rotation.z -= 0.01;
+      this.nodoRotado.rotation.z += 0.01;
     }
 
   }

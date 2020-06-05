@@ -3,7 +3,7 @@ class MyClock extends THREE.Object3D {
   constructor(gui,titleGui) {
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la caja
+    // Se crea la parte de la interfaz que corresponde al reloj
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
 
@@ -39,7 +39,7 @@ class MyClock extends THREE.Object3D {
   }
 
   createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para la velocidad del reloj
     this.guiControls = new function () {
       this.velocidad = 1.0;
 
@@ -50,10 +50,9 @@ class MyClock extends THREE.Object3D {
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles del reloj
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
     folder.add (this.guiControls, 'velocidad', -5.0, 5.0, 0.1).name ('Velocidad: ').listen();
     folder.add (this.guiControls, 'reset').name ('[ Reset ]');
@@ -72,7 +71,9 @@ class MyClock extends THREE.Object3D {
     // Y por último la traslación
     var tiempoActual = Date.now();
     var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
+
     this.agujaPosicionada.rotation.y -= this.guiControls.velocidad * segundosTranscurridos;
+
     this.tiempoAnterior = tiempoActual;
 
   }

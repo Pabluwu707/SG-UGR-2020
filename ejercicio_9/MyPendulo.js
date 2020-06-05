@@ -47,7 +47,7 @@ class MyPendulo extends THREE.Object3D {
   }
 
   createGUI (gui,titleGui,titleGui2) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para el péndulo
     this.guiControls = new function () {
       this.escala = 1.0;
       this.rotacion = 0.0;
@@ -59,7 +59,7 @@ class MyPendulo extends THREE.Object3D {
       this.velocidad1 = 0.0;
       this.velocidad2 = 0.0;
 
-      // Un botón para dejarlo todo en su posición inicial
+      // Botones para dejarlo todo en su posición inicial
       // Cuando se pulse se ejecutará esta función.
       this.reset = function () {
         this.escala = 1.0;
@@ -81,10 +81,9 @@ class MyPendulo extends THREE.Object3D {
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
     folder.add (this.guiControls, 'escala', 1.0, 2.0, 0.1).name ('Escala : ').listen();
     folder.add (this.guiControls, 'rotacion', -0.8, 0.8, 0.1).name ('Giro : ').listen();
@@ -105,7 +104,7 @@ class MyPendulo extends THREE.Object3D {
   }
 
   update () {
-
+    // Actualizamos los valores del péndulo
     this.med.scale.y = this.guiControls.escala;
     this.mini.scale.y = this.guiControls.escalaMini;
     this.med.position.y =-(this.soporteY/2 + this.medY*this.guiControls.escala/2);
@@ -114,7 +113,8 @@ class MyPendulo extends THREE.Object3D {
     this.sop2.position.y = -(this.soporteY/2 + this.medY*this.guiControls.escala*this.guiControls.posicionMini/100);
 
 
-
+    // Tomamos el TiempoActual para poder medir cuanto tiempo ha pasado desde
+    // la última ejecución de update(
     var tiempoActual = Date.now();
     var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
 
@@ -145,6 +145,7 @@ class MyPendulo extends THREE.Object3D {
       this.mini.rotation.z = this.guiControls.rotacionMini;
     }
 
+    // Actualizamos la variable tiempoAnterior
     this.tiempoAnterior = tiempoActual;
 
 }

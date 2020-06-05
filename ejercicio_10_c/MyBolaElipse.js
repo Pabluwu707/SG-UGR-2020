@@ -32,7 +32,6 @@ class MyBolaElipse extends THREE.Object3D {
 
     animacion2.onUpdate(function(){
       that.empujador.position.x = (origen2.p*(that.guiControls.radio*3-3));
-      console.log((origen2.p*(that.guiControls.radio*3-3)));
     });
 
   }

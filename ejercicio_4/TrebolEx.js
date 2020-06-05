@@ -24,10 +24,6 @@ class MyTrebolEx extends THREE.Object3D {
     this.trebolex = new THREE.Mesh (geometry, unMaterial);
     this.add (this.trebolex);
     this.trebolex.scale.set(0.4,0.4,0.4);
-
-    // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
   }
 
 

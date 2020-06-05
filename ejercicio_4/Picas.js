@@ -33,26 +33,22 @@ class MyPicas extends THREE.Object3D {
     this.pica = new THREE.Mesh (geometry, unMaterial);
     this.pica.scale.set(0.83,0.83,0.83);
     this.pica.rotation.set (0,0,3.14159);
-    this.cd = new THREE.Object3D();
-    this.cd.position.x = 1.5;
-    this.cd.position.y = -1.5;
-    this.cd.add(this.pica);
-    this.cd.add(this.base);
-    this.e = new THREE.Object3D();
-    this.e.add(this.cd);
-    this.add (this.e);
-
-    // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
+    this.nodoDesplazado = new THREE.Object3D();
+    this.nodoDesplazado.position.x = 1.5;
+    this.nodoDesplazado.position.y = -1.5;
+    this.nodoDesplazado.add(this.pica);
+    this.nodoDesplazado.add(this.base);
+    this.nodoRotado = new THREE.Object3D();
+    this.nodoRotado.add(this.nodoDesplazado);
+    this.add (this.nodoRotado);
   }
 
   update (animacion) {
     if(animacion){
       this.pica.rotation.y += 0.01;
       this.base.rotation.y += 0.01;
-      this.cd.rotation.z -= 0.01;
-      this.e.rotation.z += 0.01;
+      this.nodoDesplazado.rotation.z -= 0.01;
+      this.nodoRotado.rotation.z += 0.01;
     }
 
   }

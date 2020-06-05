@@ -2,7 +2,7 @@ class MyIco extends THREE.Object3D {
   constructor(gui,titleGui) {
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la caja
+    // Se crea la parte de la interfaz que corresponde al icosaedro
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
     this.createGUI(gui,titleGui);
 
@@ -17,12 +17,10 @@ class MyIco extends THREE.Object3D {
     this.add (this.ico);
 
     // Las geometrías se crean centradas en el origen.
-    // Como queremos que el sistema de referencia esté en la base,
-    // subimos el Mesh de la caja la mitad de su altura
   }
 
   createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para el tamaño, la orientación y la posición del icosaedro
     this.guiControls = new function () {
       this.radius = 1.0;
       this.sub = 0.0;
@@ -37,7 +35,7 @@ class MyIco extends THREE.Object3D {
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles del icosaedro
     var objeto = this;
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz

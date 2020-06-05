@@ -30,14 +30,14 @@ class MyTrebol extends THREE.Object3D {
     geometry.translate(0,-1,0);
     this.trebol = new THREE.Mesh (geometry, unMaterial);
     this.add (this.trebol);
-    this.cd = new THREE.Object3D();
-    this.cd.position.x = -1.5;
-    this.cd.position.y = 1.5;
-    this.cd.add(this.trebol);
-    this.cd.add(this.base);
-    this.e = new THREE.Object3D();
-    this.e.add(this.cd);
-    this.add (this.e);
+    this.nodoDesplazado = new THREE.Object3D();
+    this.nodoDesplazado.position.x = -1.5;
+    this.nodoDesplazado.position.y = 1.5;
+    this.nodoDesplazado.add(this.trebol);
+    this.nodoDesplazado.add(this.base);
+    this.nodoRotado = new THREE.Object3D();
+    this.nodoRotado.add(this.nodoDesplazado);
+    this.add (this.nodoRotado);
   }
 
 
@@ -45,8 +45,8 @@ class MyTrebol extends THREE.Object3D {
     if(animacion){
       this.trebol.rotation.y += 0.01;
       this.base.rotation.y += 0.01;
-      this.cd.rotation.z -= 0.01;
-      this.e.rotation.z += 0.01;
+      this.nodoDesplazado.rotation.z -= 0.01;
+      this.nodoRotado.rotation.z += 0.01;
     }
 
   }

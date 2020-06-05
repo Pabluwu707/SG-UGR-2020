@@ -3,6 +3,7 @@ class MyRecorrido extends THREE.Object3D {
   constructor() {
     super();
 
+    // Definimos el coche como un Cono
     var textura = new THREE.TextureLoader().load('../imgs/textura-ajedrezada.jpg');
     var Textura = new THREE.LineBasicMaterial({color: 0xff0000});
     var material= new THREE.MeshPhongMaterial ({map: textura});
@@ -10,6 +11,7 @@ class MyRecorrido extends THREE.Object3D {
     geom.rotateX( Math.PI/2);
     this.coche = new THREE.Mesh (geom, material);
 
+    // Creamos dos Spline para definir el camino del coche
     var spline1 = new THREE.CatmullRomCurve3([new THREE.Vector3(0,2,0),new THREE.Vector3(5,1,3),
       new THREE.Vector3(7,1,4),new THREE.Vector3(10,2,4),new THREE.Vector3(14,4,3),new THREE.Vector3(10,5,2),
     new THREE.Vector3(8,5,0),new THREE.Vector3(4,4,0),new THREE.Vector3(0,3,0)]);
@@ -27,12 +29,13 @@ class MyRecorrido extends THREE.Object3D {
     this.add(visibleSpline2);
     this.add(this.coche);
 
-
+    // Variables de Tween
     var origen1 = { x: 0, y: 0};
     var destino1 = { x: 0, y: 1};
     var origen2 = { x: 0, y: 0};
     var destino2 = { x: 0, y: 1};
 
+    //Establecemos las animaciones de Tween
     var animacion1 = new TWEEN.Tween(origen1).to(destino1,4000).easing(TWEEN.Easing.Quadratic.InOut);
     var animacion2 = new TWEEN.Tween(origen2).to(destino2,8000).easing(TWEEN.Easing.Quadratic.InOut);
     animacion1.chain(animacion2);

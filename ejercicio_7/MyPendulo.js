@@ -12,6 +12,7 @@ class MyPendulo extends THREE.Object3D {
     var matRo = new THREE.MeshPhongMaterial({color: 0xCE2626});
     var matAz = new THREE.MeshPhongMaterial({color: 0x335FD1});
 
+    // Modelo jerárquico del péndulo
     this.soporteY=0.8;
     this.medY = 1;
     this.miniY = 2;
@@ -43,7 +44,7 @@ class MyPendulo extends THREE.Object3D {
   }
 
   createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
+    // Controles para el tamaño, la orientación y la posición del péndulo
     this.guiControls = new function () {
       this.escala = 1.0;
       this.rotacion = 0.0;
@@ -59,15 +60,12 @@ class MyPendulo extends THREE.Object3D {
         this.rotacionMini = 0.0;
         this.posicionMini = 10.0;
         this.escalaMini = 1.0;
-
-
       }
     }
 
-    // Se crea una sección para los controles de la caja
+    // Se crea una sección para los controles del péndulo
     var folder = gui.addFolder (titleGui);
     // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
     // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
     folder.add (this.guiControls, 'escala', 1.0, 2.0, 0.1).name ('Escala : ').listen();
     folder.add (this.guiControls, 'rotacion', -0.8, 0.8, 0.1).name ('Giro : ').listen();
