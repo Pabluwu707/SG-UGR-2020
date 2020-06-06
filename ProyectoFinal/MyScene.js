@@ -26,6 +26,8 @@ class MyScene extends THREE.Scene {
     // Un suelo
     this.createGround ();
 
+    this.createBackGround ();
+
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
     this.add (this.axis);
@@ -72,7 +74,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 20, -260);
+    this.camera.position.set (0, 40, -310);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,-0);
     this.camera.lookAt(look);
@@ -93,21 +95,59 @@ class MyScene extends THREE.Scene {
     // El suelo es un Mesh, necesita una geometría y un material.
 
     // La geometría es una motoJugador con muy poca altura
-    var geometryGround = new THREE.BoxGeometry (100,1,500);
+    var geometryGround = new THREE.BoxGeometry (100,1,1000);
+    var geometryOtherGround = new THREE.BoxGeometry (200,1,1000);
 
     // El material se hará con una textura de madera
     var texture = new THREE.TextureLoader().load('./carretera.png');
+    var OtherTexture = new THREE.TextureLoader().load('./carretera.png');
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
+    var materialOtherGround = new THREE.MeshPhongMaterial ({map: OtherTexture});
 
     // Ya se puede construir el Mesh
     var ground = new THREE.Mesh (geometryGround, materialGround);
+    var otherGround1 = new THREE.Mesh (geometryOtherGround, materialGround);
+    var otherGround2 = new THREE.Mesh (geometryOtherGround, materialOtherGround);
 
     // Todas las figuras se crean centradas en el origen.
     // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
     ground.position.y = -0.1;
+    otherGround1.position.y = -0.1;
+    otherGround2.position.y = -0.1;
+    otherGround1.position.x = -150;
+    otherGround2.position.x = 150;
+
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-    this.add (ground);
+    this.nodoDesplazado = new THREE.Object3D();
+
+    this.nodoDesplazado.add (ground);
+    this.nodoDesplazado.add (otherGround1);
+    this.nodoDesplazado.add (otherGround2);
+    this.add(this.nodoDesplazado);
+
+  }
+
+  createBackGround () {
+    // El suelo es un Mesh, necesita una geometría y un material.
+
+    // La geometría es una motoJugador con muy poca altura
+    var geometryBackGround = new THREE.BoxGeometry (1412,450,1);
+
+    // El material se hará con una textura de madera
+    var texture = new THREE.TextureLoader().load('./fondo.jpg');
+    var materialBackGround = new THREE.MeshPhongMaterial ({map: texture});
+
+    // Ya se puede construir el Mesh
+    this.backGround = new THREE.Mesh (geometryBackGround, materialBackGround);
+
+    // Todas las figuras se crean centradas en el origen.
+    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
+    this.backGround.position.z = 400;
+    this.backGround.position.y = 140;
+
+    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
+    this.add (this.backGround);
   }
 
   createGUI () {
@@ -256,6 +296,7 @@ class MyScene extends THREE.Scene {
     //this.octree.update();
     this.motoJugador.update();
     this.obstaculo.update();
+    this.nodoDesplazado.position.z -= 0.5;
 
     //this.camera.position.z += 0.5;
 
