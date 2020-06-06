@@ -31,32 +31,33 @@ class MyScene extends THREE.Scene {
     this.add (this.axis);
 
     // Objeto jugador
-    this.motoJugador = new MyJugador(this.gui, "Controles jugador");
+    this.motoJugador = new MyJugador();
     this.motoJugador.position.y = 2;
     this.motoJugador.position.z = -220;
     this.add (this.motoJugador);
 
 
     // Objeto obstaculo (mas adelante se crearan diversas copias, por ahora uno para hacer pruebas)
-    this.obstaculo = new MyObstaculo(this.gui, "Controles obstaculo");
-    this.obstaculo.position.y = 5;
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.y = 2;
     this.obstaculo.position.z = -200;
-    this.add (this.obstaculo);
+    //this.add (this.obstaculo);
 
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), -10, 3 );
 
     // Incluimos en un array los objetos visualizados por el raycaster
-    this.obstaculos = [];
-    var num_obstaculos = Math.floor(Math.random() * 10);
+    this.listaObstaculos = [];
+    //var num_obstaculos = Math.floor(Math.random() * 10);
+    var num_obstaculos = 2;
     for(var i = 0; i < num_obstaculos;i++){
-      this.obstaculo = new MyObstaculo(this.gui, "Controles obstaculo " + i);
+      this.obstaculo = new MyObstaculo();
       var position = Math.floor(Math.random() * 100) -200;
       this.obstaculo.position.z = position;
-      this.obstaculo.position.y = 5;
+      this.obstaculo.position.y = 2;
       this.add (this.obstaculo);
-      this.obstaculos.push(this.obstaculo.getMesh());
+      this.listaObstaculos.push(this.obstaculo.getMesh());
     }
 
     // Por último creamos el modelo.
@@ -76,6 +77,15 @@ class MyScene extends THREE.Scene {
     var look = new THREE.Vector3 (0,0,-0);
     this.camera.lookAt(look);
     this.add (this.camera);
+
+    // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
+    this.cameraControl = new THREE.TrackballControls (this.camera, this.renderer.domElement);
+    // Se configuran las velocidades de los movimientos
+    this.cameraControl.rotateSpeed = 5;
+    this.cameraControl.zoomSpeed = -2;
+    this.cameraControl.panSpeed = 0.5;
+    // Debe orbitar con respecto al punto de mira de la cámara
+    this.cameraControl.target = look;
 
   }
 
@@ -238,20 +248,24 @@ class MyScene extends THREE.Scene {
     // Se muestran o no los ejes según lo que idique la GUI
     this.axis.visible = false;
 
+    // Se actualiza la posición de la cámara según su controlador
+    this.cameraControl.update();
+
 
     // Se actualiza el resto del modelo
-
-    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    this.renderer.render (this, this.getCamera());
     //this.octree.update();
     this.motoJugador.update();
     this.obstaculo.update();
 
     //this.camera.position.z += 0.5;
 
+
+    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
+    this.renderer.render (this, this.getCamera());
+
     // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
     this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
-    var intersecciones = this.raycasterFrontal.intersectObjects( this.obstaculos );
+    var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
 
     if (intersecciones.length > 0) {
       console.log("Colision");

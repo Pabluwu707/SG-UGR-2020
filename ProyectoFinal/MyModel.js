@@ -1,11 +1,11 @@
 
 class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, gui,titleGui) {
+  constructor(urlObj, urlMat, colorMaterial) {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    this.createGUI(gui,titleGui);
+    //this.createGUI(gui,titleGui);
 
     // Esto es una Mickey-herramienta que utilizaremos más adelante
     var clase = this;
@@ -14,7 +14,7 @@ class MyModel extends THREE.Object3D {
     var objLoader = new THREE.OBJLoader();
 
 
-    var materials = new THREE.MeshToonMaterial();
+    var materials = new THREE.MeshToonMaterial({color: colorMaterial});
 
     // Función de carga del objeto
     objLoader.load(

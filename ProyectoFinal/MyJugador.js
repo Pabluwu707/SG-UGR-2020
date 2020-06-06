@@ -1,15 +1,15 @@
 
 class MyJugador extends THREE.Object3D {
-  constructor(gui, titleGui) {
+  constructor() {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
 
-    var cristal = new MyModel("../models/glass.obj","../models/glass.mtl", gui, "Controles1");
-    var carroceria = new MyModel("../models/moto.obj","../models/moto.mtl", gui, "Controles2");
-    var partesNegras = new MyModel("../models/motoblackparts.obj","../models/motoblackparts.mtl", gui, "Controles3");
-    var soportes = new MyModel("../models/suportparts.obj","../models/suportparts.mtl", gui, "Controles4");
+    var cristal = new MyModel("../models/glass.obj","../models/glass.mtl", 0xF9C80E);
+    var carroceria = new MyModel("../models/moto.obj","../models/moto.mtl", 0xFF3864);
+    var partesNegras = new MyModel("../models/motoblackparts.obj","../models/motoblackparts.mtl", 0x2E2157);
+    var soportes = new MyModel("../models/suportparts.obj","../models/suportparts.mtl");
 
     // Un Mesh se compone de geometría y material
     var boxGeom = new THREE.BoxGeometry (3,3,3);
@@ -20,6 +20,7 @@ class MyJugador extends THREE.Object3D {
     this.mesh = new THREE.Mesh (boxGeom, boxMat);
     var box = this.mesh;
 
+    //this.add(box);
 
     // Y añadirlo como hijo del Object3D (el this)
     this.add (cristal);
