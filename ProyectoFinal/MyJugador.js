@@ -1,11 +1,15 @@
 
 class MyJugador extends THREE.Object3D {
-  constructor(gui,titleGui) {
+  constructor() {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    this.createGUI(gui,titleGui);
+
+    var cristal = new MyModel("../models/glass.obj","../models/glass.mtl");
+    var carroceria = new MyModel("../models/moto.obj","../models/moto.mtl");
+    var partesNegras = new MyModel("../models/motoblackparts.obj","../models/motoblackparts.mtl");
+    var soportes = new MyModel("../models/suportparts.obj","../models/suportparts.mtl");
 
     // Un Mesh se compone de geometría y material
     var boxGeom = new THREE.BoxGeometry (3,3,3);
@@ -18,7 +22,12 @@ class MyJugador extends THREE.Object3D {
 
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (box);
+    this.add (cristal);
+    this.add (soportes);
+    this.add (partesNegras);
+    this.add (carroceria);
+
+    this.rotation.y += Math.PI/2;
 
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
@@ -65,12 +74,12 @@ class MyJugador extends THREE.Object3D {
 
   update () {
      if(this.left){
-        if(this.position.x <= 15){
+        if(this.position.x <= 43){
            this.position.x += 0.6;
         }
      }
      else if(this.right){
-        if(this.position.x >= -15){
+        if(this.position.x >= -43){
           this.position.x -= 0.6;
         }
      }

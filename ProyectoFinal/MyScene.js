@@ -31,8 +31,8 @@ class MyScene extends THREE.Scene {
     this.add (this.axis);
 
     // Objeto jugador
-    this.motoJugador = new MyJugador(this.gui, "Controles del modelo");
-    this.motoJugador.position.y = 5;
+    this.motoJugador = new MyJugador();
+    this.motoJugador.position.y = 2;
     this.motoJugador.position.z = -220;
     this.add (this.motoJugador);
 
@@ -49,7 +49,15 @@ class MyScene extends THREE.Scene {
 
     // Incluimos en un array los objetos visualizados por el raycaster
     this.obstaculos = [];
-    this.obstaculos.push(this.obstaculo.getMesh());
+    var num_obstaculos = Math.floor(Math.random() * 10);
+    for(var i = 0; i < num_obstaculos;i++){
+      this.obstaculo = new MyObstaculo();
+      var position = Math.floor(Math.random() * 100) -200;
+      this.obstaculo.position.z = position;
+      this.obstaculo.position.y = 5;
+      this.add (this.obstaculo);
+      this.obstaculos.push(this.obstaculo.getMesh());
+    }
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
@@ -63,9 +71,9 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 30, -280);
+    this.camera.position.set (0, 20, -260);
     // Y hacia dónde mira
-    var look = new THREE.Vector3 (0,0,-200);
+    var look = new THREE.Vector3 (0,0,-0);
     this.camera.lookAt(look);
     this.add (this.camera);
 
@@ -75,10 +83,10 @@ class MyScene extends THREE.Scene {
     // El suelo es un Mesh, necesita una geometría y un material.
 
     // La geometría es una motoJugador con muy poca altura
-    var geometryGround = new THREE.BoxGeometry (40,1,500);
+    var geometryGround = new THREE.BoxGeometry (100,1,500);
 
     // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('../imgs/road.jpg');
+    var texture = new THREE.TextureLoader().load('./carretera.png');
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
 
     // Ya se puede construir el Mesh
