@@ -31,7 +31,7 @@ class MyScene extends THREE.Scene {
     this.add (this.axis);
 
     // Objeto jugador
-    this.motoJugador = new MyJugador();
+    this.motoJugador = new MyJugador(this.gui, "Controles jugador");
     this.motoJugador.position.y = 2;
     this.motoJugador.position.z = -220;
     this.add (this.motoJugador);
@@ -51,7 +51,7 @@ class MyScene extends THREE.Scene {
     this.obstaculos = [];
     var num_obstaculos = Math.floor(Math.random() * 10);
     for(var i = 0; i < num_obstaculos;i++){
-      this.obstaculo = new MyObstaculo();
+      this.obstaculo = new MyObstaculo(this.gui, "Controles obstaculo " + i);
       var position = Math.floor(Math.random() * 100) -200;
       this.obstaculo.position.z = position;
       this.obstaculo.position.y = 5;
