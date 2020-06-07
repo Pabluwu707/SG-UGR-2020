@@ -5,10 +5,10 @@ class MyObstaculo extends THREE.Object3D {
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    
+
 
     // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (3,3,3);
+    var boxGeom = new THREE.BoxGeometry (10,10,10);
     // Como material se crea uno a partir de un color
     var boxMat = new THREE.MeshNormalMaterial();
 

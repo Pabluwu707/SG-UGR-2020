@@ -8,6 +8,9 @@ class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
 
+    this.invulnerable = false;
+    this.nodoDesplazado = new THREE.Object3D();
+
     this.background = new THREE.Color( 0x050505 );
 
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
@@ -29,6 +32,7 @@ class MyScene extends THREE.Scene {
     this.createGround ();
 
     this.createBackGround ();
+
 
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
@@ -52,8 +56,8 @@ class MyScene extends THREE.Scene {
 
     // Objeto montania
     this.montaniaFondo = new MyMontania();
-    this.montaniaFondo.position.z = 100;
-    //this.add (this.montaniaFondo);
+    this.montaniaFondo.position.z = 250;
+    this.nodoDesplazado.add (this.montaniaFondo);
 
 
     // Incluimos en un array los objetos visualizados por el raycaster
@@ -110,7 +114,7 @@ class MyScene extends THREE.Scene {
       this.obstaculo.position.y = 2;
 
       // Añadir obstáculo
-      this.add (this.obstaculo);
+      this.nodoDesplazado.add (this.obstaculo);
       this.listaObstaculos.push(this.obstaculo.getMesh());
      }
 
@@ -168,7 +172,6 @@ class MyScene extends THREE.Scene {
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-    this.nodoDesplazado = new THREE.Object3D();
 
     this.nodoDesplazado.add (ground);
     this.nodoDesplazado.add (otherGround1);
@@ -358,7 +361,29 @@ class MyScene extends THREE.Scene {
     var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
 
     if (intersecciones.length > 0) {
-      console.log("Colision");
+      var vida1 = document.getElementById("hp1");
+      var vida2 = document.getElementById("hp2");
+      var vida3 = document.getElementById("hp3");
+
+      if(vida1.style.display != "none" && !this.invulnerable){
+        this.tiempoActual = Date.now();
+        vida1.style.display = "none";
+        this.invulnerable = true;
+      }
+      else if(vida2.style.display != "none" && !this.invulnerable){
+        this.tiempoActual = Date.now();
+        vida2.style.display = "none";
+        this.invulnerable = true;
+      }
+      else if(vida3.style.display != "none" && !this.invulnerable){
+        this.tiempoActual = Date.now();
+        vida3.style.display = "none";
+        this.invulnerable = true;
+      }
+      console.log((Date.now()-this.tiempoActual)/1000);
+      if((Date.now()-this.tiempoActual)/1000 >= 3){
+        this.invulnerable = false;
+      }
     }
 
     /*
