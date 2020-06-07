@@ -8,6 +8,8 @@ class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
 
+    this.background = new THREE.Color( 0x050505 );
+
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
 
@@ -33,38 +35,85 @@ class MyScene extends THREE.Scene {
     this.add (this.axis);
 
     // Objeto jugador
-    this.motoJugador = new MyJugador();
-    this.motoJugador.position.y = 2;
+    this.motoJugador = new MyJugador(this.gui, "Jugador yokese");
+    this.motoJugador.position.y = 3.8;
     this.motoJugador.position.z = -220;
+    this.motoJugador.rotation.y += Math.PI/2;
+
     this.add (this.motoJugador);
 
 
-    // Objeto obstaculo (mas adelante se crearan diversas copias, por ahora uno para hacer pruebas)
-    this.obstaculo = new MyObstaculo();
-    this.obstaculo.position.y = 2;
-    this.obstaculo.position.z = -200;
+    // Objeto obstaculo de prueba
+    //this.obstaculo = new MyObstaculo();
+    //this.obstaculo.position.y = 2;
+    //this.obstaculo.position.z = -200;
     //this.add (this.obstaculo);
+
+
+    // Objeto montania
+    this.montaniaFondo = new MyMontania();
+    this.montaniaFondo.position.z = 100;
+    //this.add (this.montaniaFondo);
+
+
+    // Incluimos en un array los objetos visualizados por el raycaster
+    this.listaObstaculos = [];
+    this.posiblesCarriles = [];
+    //var num_obstaculos = Math.floor(Math.random() * 10);
+    this.generateObstaculos(3);
 
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), -10, 3 );
 
-    // Incluimos en un array los objetos visualizados por el raycaster
-    this.listaObstaculos = [];
-    //var num_obstaculos = Math.floor(Math.random() * 10);
-    var num_obstaculos = 2;
-    for(var i = 0; i < num_obstaculos;i++){
-      this.obstaculo = new MyObstaculo();
-      var position = Math.floor(Math.random() * 100) -200;
-      this.obstaculo.position.z = position;
-      this.obstaculo.position.y = 2;
-      this.add (this.obstaculo);
-      this.listaObstaculos.push(this.obstaculo.getMesh());
-    }
+
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
+  }
+
+
+  generateObstaculos(numObstaculos) {
+
+     for(var i = 0; i < numObstaculos;i++){
+      // Crear nuevo obstáculo
+      this.obstaculo = new MyObstaculo();
+
+      // Determinar posición Z
+      var position = Math.floor(Math.random() * (100 - 50)) + 50*i - 200;
+      this.obstaculo.position.z = position;
+
+      // Determinar posicion X
+      var numeroCarril = Math.floor(Math.random() * 4 + 1);
+      console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
+      switch (numeroCarril) {
+         case 1 :
+          this.obstaculo.position.x = 33;
+          //console.log("left");
+          break;
+         case 2 :
+          this.obstaculo.position.x = 11;
+          //console.log("up");
+          break;
+         case 3 :
+          this.obstaculo.position.x = -10;
+          //console.log("right");
+          break;
+         case 4 :
+          this.obstaculo.position.x = -33;
+          //console.log("down");
+          break;
+      }
+
+      // Determinar posición Y
+      this.obstaculo.position.y = 2;
+
+      // Añadir obstáculo
+      this.add (this.obstaculo);
+      this.listaObstaculos.push(this.obstaculo.getMesh());
+     }
+
   }
 
   createCamera () {

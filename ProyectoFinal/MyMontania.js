@@ -1,6 +1,6 @@
 
-class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, colorMaterial) {
+class MyMontania extends THREE.Object3D {
+  constructor() {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
@@ -14,12 +14,12 @@ class MyModel extends THREE.Object3D {
     var objLoader = new THREE.OBJLoader();
 
 
-    var materials = new THREE.MeshToonMaterial({color: colorMaterial});
+    var materials = new THREE.MeshToonMaterial({color: 0x090951});
 
     // Función de carga del objeto
     objLoader.load(
        // URL del objeto a cargar
-       urlObj,
+       "../models/montania.obj",
 
        // Función callback invocada una vez se termina de cargar el objeto
        function ( object ) {
@@ -27,10 +27,10 @@ class MyModel extends THREE.Object3D {
             if ( child instanceof THREE.Mesh ) {
                 child.material = materials;
                 var edges = new THREE.EdgesGeometry( child.geometry );
-               var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
-               line.material.opacity = 0.20;
-               line.material.transparent = true;
-               clase.add( line );
+                var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x04fefd } ) );
+ 					 line.material.opacity = 0.40;
+					 line.material.transparent = true;
+                clase.add( line );
             }
           } );
 
@@ -49,6 +49,8 @@ class MyModel extends THREE.Object3D {
        }
     );
 
+
+    this.rotation.y += Math.PI/2;
 
     this.userData = this;
 
@@ -73,19 +75,5 @@ class MyModel extends THREE.Object3D {
   }
 
   update () {
-    if (this.guiControls.giroContinuo)
-      this.rotation.y += 0.006;
-
-    if (this.left)
-      this.position.x += 0.1;
-
-    if (this.right)
-      this.position.x -= 0.1;
-
-    if (this.forward)
-      this.position.z += 0.5;
-
-    if (this.backward)
-      this.position.z -= 0.2;
   }
 }
