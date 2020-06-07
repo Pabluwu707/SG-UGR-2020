@@ -8,10 +8,10 @@ class MyJugador extends THREE.Object3D {
     this.createGUI(gui,titleGui);
 
 
-    var cristal = new MyModel("../models/glass.obj","../models/glass.mtl", 0xF9C80E);
-    var carroceria = new MyModel("../models/moto.obj","../models/moto.mtl", 0xFF3864);
-    var partesNegras = new MyModel("../models/motoblackparts.obj","../models/motoblackparts.mtl", 0x2E2157);
-    var soportes = new MyModel("../models/suportparts.obj","../models/suportparts.mtl");
+    var cristal = new MyModel("../models/cristal.obj","../models/cristal.mtl", 0xF9C80E, 0.5);
+    var carroceria = new MyModel("../models/carroceria.obj","../models/carroceria.mtl", 0xFF3864);
+    var partesNegras = new MyModel("../models/partesNegras.obj","../models/partesNegras.mtl", 0x2E2157);
+    var soportes = new MyModel("../models/partesSoporte.obj","../models/partesSoporte.mtl");
 
     // Un Mesh se compone de geometría y material
     var boxGeom = new THREE.BoxGeometry (3,3,3);
@@ -30,6 +30,8 @@ class MyJugador extends THREE.Object3D {
     this.add (partesNegras);
     this.add (carroceria);
 
+    this.invulnerabilidad = false;
+
     this.scale.set(1.5,1.5,1.5);
 
     // Las geometrías se crean centradas en el origen.
@@ -41,7 +43,7 @@ class MyJugador extends THREE.Object3D {
     // Controles para el tamaño, la orientación y la posición de la caja
     this.guiControls = new function () {
       this.rotX = 0.0;
-      this.rotY = 1.6;
+      this.rotY = 0.0;
       this.rotZ = 0.0;
 
       // Un botón para dejarlo todo en su posición inicial
@@ -77,6 +79,11 @@ class MyJugador extends THREE.Object3D {
  }
 
   update () {
+     // Modificación del modelo
+     if (this.invulnerable) {
+     }
+
+     // Opciones de movimiento
      if(this.left){
         if(this.position.x <= 43){
            this.position.x += 0.6;

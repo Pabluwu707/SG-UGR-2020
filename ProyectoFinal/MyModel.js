@@ -1,6 +1,6 @@
 
 class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, colorMaterial) {
+  constructor(urlObj, urlMat, colorMaterial, opacity = 1) {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
@@ -15,6 +15,9 @@ class MyModel extends THREE.Object3D {
 
 
     var materials = new THREE.MeshToonMaterial({color: colorMaterial});
+
+    materials.transparent = true;
+    materials.opacity = opacity;
 
     // Función de carga del objeto
     objLoader.load(

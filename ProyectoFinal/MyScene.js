@@ -360,30 +360,31 @@ class MyScene extends THREE.Scene {
     this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
     var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
 
-    if (intersecciones.length > 0) {
-      var vida1 = document.getElementById("hp1");
-      var vida2 = document.getElementById("hp2");
-      var vida3 = document.getElementById("hp3");
+    if (!this.motoJugador.invulnerable) {
+      if (intersecciones.length > 0) {
+        var vida1 = document.getElementById("hp1");
+        var vida2 = document.getElementById("hp2");
+        var vida3 = document.getElementById("hp3");
 
-      if(vida1.style.display != "none" && !this.invulnerable){
-        this.tiempoActual = Date.now();
-        vida1.style.display = "none";
-        this.invulnerable = true;
+        this.comienzoInvulnerable = Date.now();
+        this.motoJugador.invulnerable = true;
+
+        if(vida1.style.display != "none"){
+          vida1.style.display = "none";
+        }
+        else if(vida2.style.display != "none"){
+          vida2.style.display = "none";
+        }
+        else if(vida3.style.display != "none"){
+          vida3.style.display = "none";
+        }
       }
-      else if(vida2.style.display != "none" && !this.invulnerable){
-        this.tiempoActual = Date.now();
-        vida2.style.display = "none";
-        this.invulnerable = true;
-      }
-      else if(vida3.style.display != "none" && !this.invulnerable){
-        this.tiempoActual = Date.now();
-        vida3.style.display = "none";
-        this.invulnerable = true;
-      }
-      console.log((Date.now()-this.tiempoActual)/1000);
-      if((Date.now()-this.tiempoActual)/1000 >= 3){
-        this.invulnerable = false;
-      }
+    }
+    else if (this.motoJugador.invulnerable) {
+       console.log((Date.now()-this.comienzoInvulnerable)/1000);
+       if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
+         this.motoJugador.invulnerable = false;
+       }
     }
 
     /*
