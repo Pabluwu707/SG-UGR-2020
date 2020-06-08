@@ -34,6 +34,21 @@ class MyJugador extends THREE.Object3D {
 
     this.scale.set(1.5,1.5,1.5);
 
+    // Inclinación de la moto usando Tween
+    this.primeraEjecucion = false;
+    this.rotacionInicio = 0;
+    var origen = {p: 0.3};
+    var destino = {p: 0};
+    var that = this;
+
+    var movimiento = new TWEEN.Tween(origen)
+      .to(destino,2000)
+      .onUpdate(function(){
+         that.rotation.z = origen.p;
+
+      })
+      .start();
+
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
@@ -87,6 +102,8 @@ class MyJugador extends THREE.Object3D {
 
      // Opciones de movimiento
      if(this.left){
+
+        this.primeraEjecucion = true;
         if(this.position.x <= 43){
            this.position.x += 0.6;
            if (this.rotation.z > -0.3) {
@@ -95,6 +112,7 @@ class MyJugador extends THREE.Object3D {
         }
      }
      else if(this.right){
+        this.primeraEjecucion = true;
         if(this.position.x >= -43){
           this.position.x -= 0.6;
           if (this.rotation.z < 0.3) {
@@ -103,13 +121,19 @@ class MyJugador extends THREE.Object3D {
         }
      }
      else {
+        /*if (this.primeraEjecucion) {
+           this.rotacionInicio = this.rotation.z;
+           this.primeraEjecucion = false;
+        }
+        TWEEN.update();*/
         // Devolver rotación a 0, está bugeado
         // Intentaré hacerlo con Tween para evitar errores
         /*if (this.rotation.z > 0) {
-          this.rotation.z -= 0.1;
+          this.rotation.z -= 0.05;
         } else if (this.rotation.z < 0) {
-          this.rotation.z += 0.1;
+          this.rotation.z += 0.05;
        }*/
+       this.rotation.z = 0;
      }
 
      if (this.forward)
