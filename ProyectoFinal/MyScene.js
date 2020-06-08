@@ -348,61 +348,84 @@ class MyScene extends THREE.Scene {
     this.renderer.render (this, this.getCamera());
     console.log(MyScene.nivel);
 
-    switch(MyScene.nivel){
-      case(1):
-        MyScene.nivel = 0;
-        this.gameState = MyScene.Nivel1;
-        this.generateObstaculos(3);
-        break;
-      case(2):
-        MyScene.nivel = 0;
-        this.gameState = MyScene.Nivel2;
-        this.generateObstaculos(5);
-        break;
-      case(3):
-        MyScene.nivel = 0;
-        this.gameState = MyScene.Nivel3;
-        this.generateObstaculos(10);
-        break;
-    }
 
-    if (this.gameState == MyScene.Nivel1) {
-      // Se actualiza el resto del modelo
-      //this.octree.update();
-      this.motoJugador.update();
-      this.obstaculo.update();
-      this.nodoDesplazado.position.z -= 0.5;
 
-      // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
-      this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
-      var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
-
-      if (!this.motoJugador.invulnerable) {
-        if (intersecciones.length > 0) {
-          var vida1 = document.getElementById("hp1");
-          var vida2 = document.getElementById("hp2");
-          var vida3 = document.getElementById("hp3");
-
-          this.comienzoInvulnerable = Date.now();
-          this.motoJugador.invulnerable = true;
-
-          if(vida1.style.display != "none"){
-            vida1.style.display = "none";
-          }
-          else if(vida2.style.display != "none"){
-            vida2.style.display = "none";
-          }
-          else if(vida3.style.display != "none"){
-            vida3.style.display = "none";
-          }
-        }
-      }
-      else if (this.motoJugador.invulnerable) {
-         console.log((Date.now()-this.comienzoInvulnerable)/1000);
-         if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
-           this.motoJugador.invulnerable = false;
+    switch (this.gameState) {
+      case(MyScene.Menu):
+         // Generar nivel
+         switch(MyScene.nivel){
+           case(1):
+             MyScene.nivel = 0;
+             this.gameState = MyScene.Nivel1;
+             this.generateObstaculos(3);
+             break;
+           case(2):
+             MyScene.nivel = 0;
+             this.gameState = MyScene.Nivel2;
+             this.generateObstaculos(5);
+             break;
+           case(3):
+             MyScene.nivel = 0;
+             this.gameState = MyScene.Nivel3;
+             this.generateObstaculos(10);
+             break;
          }
-      }
+         break;
+
+      case(MyScene.Nivel1):
+         // Se actualiza el resto del modelo
+         //this.octree.update();
+         this.motoJugador.update();
+         this.obstaculo.update();
+         this.nodoDesplazado.position.z -= 0.5;
+
+         // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
+         this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
+         var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
+
+         if (!this.motoJugador.invulnerable) {
+           if (intersecciones.length > 0) {
+             var vida1 = document.getElementById("hp1");
+             var vida2 = document.getElementById("hp2");
+             var vida3 = document.getElementById("hp3");
+
+             this.comienzoInvulnerable = Date.now();
+             this.motoJugador.invulnerable = true;
+
+             if(vida1.style.display != "none"){
+               vida1.style.display = "none";
+             }
+             else if(vida2.style.display != "none"){
+               vida2.style.display = "none";
+             }
+             else if(vida3.style.display != "none"){
+               vida3.style.display = "none";
+             }
+           }
+         }
+         else if (this.motoJugador.invulnerable) {
+            console.log((Date.now()-this.comienzoInvulnerable)/1000);
+            if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
+              this.motoJugador.invulnerable = false;
+            }
+         }
+      break;
+
+      case(MyScene.Nivel2):
+      break;
+
+      case(MyScene.Nivel3):
+      break;
+
+      case(MyScene.Victoria):
+      break;
+
+      case(MyScene.Derrota):
+      break;
+
+    }
+    if (this.gameState == MyScene.Nivel1) {
+
     }
 
 
