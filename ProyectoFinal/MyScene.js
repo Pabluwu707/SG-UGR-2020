@@ -17,6 +17,10 @@ class MyScene extends THREE.Scene {
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
 
+    this.cabeza = new MyObstaculo();
+    this.cabeza.position.y = 50;
+    this.add(this.cabeza);
+
     // Construimos los distinos elementos que tendremos en la escena
 
     // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
@@ -28,39 +32,7 @@ class MyScene extends THREE.Scene {
 
     // Un suelo
     this.nodoDesplazado = new THREE.Object3D();
-    this.createGround ();
 
-    this.createBackGround ();
-
-
-    // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
-    this.axis = new THREE.AxesHelper (5);
-    this.add (this.axis);
-
-    // Objeto jugador
-    this.motoJugador = new MyJugador(this.gui, "Jugador yokese");
-    this.motoJugador.position.y = 3.8;
-    this.motoJugador.position.z = -220;
-
-    this.add (this.motoJugador);
-
-
-    // Objeto obstaculo de prueba
-    //this.obstaculo = new MyObstaculo();
-    //this.obstaculo.position.y = 2;
-    //this.obstaculo.position.z = -200;
-    //this.add (this.obstaculo);
-
-
-    // Objeto montania
-    this.montaniaFondo = new MyMontania();
-    this.montaniaFondo.position.z = 250;
-    this.nodoDesplazado.add (this.montaniaFondo);
-
-
-    // Incluimos en un array los objetos visualizados por el raycaster
-    this.listaObstaculos = [];
-    this.posiblesCarriles = [];
     //var num_obstaculos = Math.floor(Math.random() * 10);
 
 
@@ -76,8 +48,30 @@ class MyScene extends THREE.Scene {
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
   }
 
+  generateMontania(){
+
+    // Objeto montania
+    this.montaniaFondo = new MyMontania();
+    this.montaniaFondo.position.z = 250;
+    this.nodoDesplazado.add (this.montaniaFondo);
+
+  }
+
+  generateJugador(){
+
+    this.motoJugador = new MyJugador(this.gui, "Jugador yokese");
+    this.motoJugador.position.y = 3.8;
+    this.motoJugador.position.z = -220;
+
+    this.add (this.motoJugador);
+
+  }
 
   generateObstaculos(numObstaculos) {
+
+      // Incluimos en un array los objetos visualizados por el raycaster
+      this.listaObstaculos = [];
+      this.posiblesCarriles = [];
 
      for(var i = 0; i < numObstaculos;i++){
       // Crear nuevo obstáculo
@@ -147,34 +141,48 @@ class MyScene extends THREE.Scene {
     // El suelo es un Mesh, necesita una geometría y un material.
 
     // La geometría es una motoJugador con muy poca altura
-    var geometryGround = new THREE.BoxGeometry (100,1,1000);
-    var geometryOtherGround = new THREE.BoxGeometry (200,1,1000);
-
+    var geometryGround = new THREE.BoxGeometry (500,1,300);
     // El material se hará con una textura de madera
     var texture = new THREE.TextureLoader().load('./carretera.png');
-    var OtherTexture = new THREE.TextureLoader().load('./carretera.png');
-    var materialGround = new THREE.MeshPhongMaterial ({map: texture});
-    var materialOtherGround = new THREE.MeshPhongMaterial ({map: OtherTexture});
 
-    // Ya se puede construir el Mesh
+    var materialGround = new THREE.MeshPhongMaterial ({map: texture});
+
     var ground = new THREE.Mesh (geometryGround, materialGround);
-    var otherGround1 = new THREE.Mesh (geometryOtherGround, materialGround);
-    var otherGround2 = new THREE.Mesh (geometryOtherGround, materialOtherGround);
 
     // Todas las figuras se crean centradas en el origen.
     // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
     ground.position.y = -0.1;
-    otherGround1.position.y = -0.1;
-    otherGround2.position.y = -0.1;
-    otherGround1.position.x = -150;
-    otherGround2.position.x = 150;
+    ground.position.z = -300;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
 
     this.nodoDesplazado.add (ground);
-    this.nodoDesplazado.add (otherGround1);
-    this.nodoDesplazado.add (otherGround2);
+
+    for(var i = 0; i < 10; i++){
+      var ground = new THREE.Mesh (geometryGround, materialGround);
+
+      // Todas las figuras se crean centradas en el origen.
+      // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
+      ground.position.y = -0.1;
+      ground.position.z = 300*i;
+
+
+      // Que no se nos olvide añadirlo a la escena, que en este caso es  this
+
+      this.nodoDesplazado.add (ground);
+    }
+    // Ya se puede construir el Mesh
+    var ground = new THREE.Mesh (geometryGround, materialGround);
+
+    // Todas las figuras se crean centradas en el origen.
+    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
+    ground.position.y = -0.1;
+
+
+    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
+
+    this.nodoDesplazado.add (ground);
     this.add(this.nodoDesplazado);
 
   }
@@ -211,7 +219,6 @@ class MyScene extends THREE.Scene {
     this.guiControls = new function() {
       // En el contexto de una función   this   alude a la función
       this.lightIntensity = 0.5;
-      this.axisOnOff = true;
     }
 
     // Se crea una sección para los controles de esta clase
@@ -220,8 +227,6 @@ class MyScene extends THREE.Scene {
     // Se le añade un control para la intensidad de la luz
     folder.add (this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
 
-    // Y otro para mostrar u ocultar los ejes
-    folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
 
     return gui;
   }
@@ -336,8 +341,6 @@ class MyScene extends THREE.Scene {
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
     this.spotLight.intensity = this.guiControls.lightIntensity;
 
-    // Se muestran o no los ejes según lo que idique la GUI
-    this.axis.visible = false;
 
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
@@ -346,28 +349,44 @@ class MyScene extends THREE.Scene {
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
-    console.log(MyScene.nivel);
 
 
 
     switch (this.gameState) {
       case(MyScene.Menu):
-         // Generar nivel
+      this.cabeza.rotation.z += 0.01;
+      this.cabeza.rotation.x += 0.01;
+      this.cabeza.rotation.y += 0.01;
          switch(MyScene.nivel){
            case(1):
              MyScene.nivel = 0;
              this.gameState = MyScene.Nivel1;
+             this.remove(this.cabeza);
              this.generateObstaculos(3);
+             this.createGround ();
+             this.generateJugador();
+             this.generateMontania();
+             this.createBackGround ();
              break;
            case(2):
              MyScene.nivel = 0;
              this.gameState = MyScene.Nivel2;
+             this.remove(this.cabeza);
              this.generateObstaculos(5);
+             this.createGround ();
+             this.generateJugador();
+             this.generateMontania();
+             this.createBackGround ();
              break;
            case(3):
              MyScene.nivel = 0;
              this.gameState = MyScene.Nivel3;
+             this.remove(this.cabeza);
              this.generateObstaculos(10);
+             this.createGround ();
+             this.generateJugador();
+             this.generateMontania();
+             this.createBackGround ();
              break;
          }
          break;
@@ -424,10 +443,6 @@ class MyScene extends THREE.Scene {
       break;
 
     }
-    if (this.gameState == MyScene.Nivel1) {
-
-    }
-
 
     /*
     // OCTREE
