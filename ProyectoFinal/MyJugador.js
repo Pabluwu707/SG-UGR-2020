@@ -83,20 +83,33 @@ class MyJugador extends THREE.Object3D {
      if (this.invulnerable) {
      }
 
+     console.log(this.rotation.z);
+
      // Opciones de movimiento
      if(this.left){
         if(this.position.x <= 43){
            this.position.x += 0.6;
+           if (this.rotation.z > -0.3) {
+             this.rotation.z -= 0.05;
+           }
         }
-        //if(this.rotation.x <)
-        this.rotation.z += 0.006;
      }
      else if(this.right){
         if(this.position.x >= -43){
           this.position.x -= 0.6;
+          if (this.rotation.z < 0.3) {
+            this.rotation.z += 0.05;
+          }
         }
-
-        this.rotation.z -= 0.006;
+     }
+     else {
+        // Devolver rotación a 0, está bugeado
+        // Intentaré hacerlo con Tween para evitar errores
+        /*if (this.rotation.z > 0) {
+          this.rotation.z -= 0.1;
+        } else if (this.rotation.z < 0) {
+          this.rotation.z += 0.1;
+       }*/
      }
 
      if (this.forward)
@@ -106,6 +119,6 @@ class MyJugador extends THREE.Object3D {
       this.position.z -= 0.5;
 
 
-    this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
+    //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
   }
 }

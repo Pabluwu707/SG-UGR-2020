@@ -1,6 +1,6 @@
 
 class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, colorMaterial, opacity = 1) {
+  constructor(urlObj, urlMat, colorMaterial = 0x000000, opacity = 1) {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja

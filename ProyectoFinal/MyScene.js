@@ -8,9 +8,6 @@ class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
 
-    this.invulnerable = false;
-    this.nodoDesplazado = new THREE.Object3D();
-
     this.background = new THREE.Color( 0x050505 );
 
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
@@ -29,6 +26,7 @@ class MyScene extends THREE.Scene {
     this.createCamera ();
 
     // Un suelo
+    this.nodoDesplazado = new THREE.Object3D();
     this.createGround ();
 
     this.createBackGround ();
@@ -42,7 +40,6 @@ class MyScene extends THREE.Scene {
     this.motoJugador = new MyJugador(this.gui, "Jugador yokese");
     this.motoJugador.position.y = 3.8;
     this.motoJugador.position.z = -220;
-    this.motoJugador.rotation.y += Math.PI/2;
 
     this.add (this.motoJugador);
 
@@ -71,6 +68,8 @@ class MyScene extends THREE.Scene {
     this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), -10, 3 );
 
 
+    // Establecemos el estado incial del juego
+    this.gameState = MyScene.Nivel1;
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
@@ -343,49 +342,50 @@ class MyScene extends THREE.Scene {
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
 
-
-    // Se actualiza el resto del modelo
-    //this.octree.update();
-    this.motoJugador.update();
-    this.obstaculo.update();
-    this.nodoDesplazado.position.z -= 0.5;
-
     //this.camera.position.z += 0.5;
-
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
-    // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
-    this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
-    var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
+    if (this.gameState == MyScene.Nivel1) {
+      // Se actualiza el resto del modelo
+      //this.octree.update();
+      this.motoJugador.update();
+      this.obstaculo.update();
+      this.nodoDesplazado.position.z -= 0.5;
 
-    if (!this.motoJugador.invulnerable) {
-      if (intersecciones.length > 0) {
-        var vida1 = document.getElementById("hp1");
-        var vida2 = document.getElementById("hp2");
-        var vida3 = document.getElementById("hp3");
+      // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
+      this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
+      var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
 
-        this.comienzoInvulnerable = Date.now();
-        this.motoJugador.invulnerable = true;
+      if (!this.motoJugador.invulnerable) {
+        if (intersecciones.length > 0) {
+          var vida1 = document.getElementById("hp1");
+          var vida2 = document.getElementById("hp2");
+          var vida3 = document.getElementById("hp3");
 
-        if(vida1.style.display != "none"){
-          vida1.style.display = "none";
-        }
-        else if(vida2.style.display != "none"){
-          vida2.style.display = "none";
-        }
-        else if(vida3.style.display != "none"){
-          vida3.style.display = "none";
+          this.comienzoInvulnerable = Date.now();
+          this.motoJugador.invulnerable = true;
+
+          if(vida1.style.display != "none"){
+            vida1.style.display = "none";
+          }
+          else if(vida2.style.display != "none"){
+            vida2.style.display = "none";
+          }
+          else if(vida3.style.display != "none"){
+            vida3.style.display = "none";
+          }
         }
       }
+      else if (this.motoJugador.invulnerable) {
+         console.log((Date.now()-this.comienzoInvulnerable)/1000);
+         if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
+           this.motoJugador.invulnerable = false;
+         }
+      }
     }
-    else if (this.motoJugador.invulnerable) {
-       console.log((Date.now()-this.comienzoInvulnerable)/1000);
-       if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
-         this.motoJugador.invulnerable = false;
-       }
-    }
+
 
     /*
     // OCTREE
@@ -405,6 +405,16 @@ class MyScene extends THREE.Scene {
 
   }
 }
+
+
+// Enum pero de pega porque Javascript no me deja
+MyScene.Menu = 0;
+MyScene.Nivel1 = 1;
+MyScene.Nivel2 = 2;
+MyScene.Nivel3 = 3;
+MyScene.Victoria = 4;
+MyScene.Derrota = 5;
+
 
 /// La función   main
 $(function () {
