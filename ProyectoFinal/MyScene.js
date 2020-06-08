@@ -4,6 +4,7 @@
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
  */
 
+
 class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
@@ -61,7 +62,6 @@ class MyScene extends THREE.Scene {
     this.listaObstaculos = [];
     this.posiblesCarriles = [];
     //var num_obstaculos = Math.floor(Math.random() * 10);
-    this.generateObstaculos(3);
 
 
     // Inicialización del raycaster usado para detectar colisiones frontales
@@ -69,7 +69,7 @@ class MyScene extends THREE.Scene {
 
 
     // Establecemos el estado incial del juego
-    this.gameState = MyScene.Nivel1;
+    this.gameState = MyScene.Menu;
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
@@ -346,6 +346,25 @@ class MyScene extends THREE.Scene {
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
+    console.log(MyScene.nivel);
+
+    switch(MyScene.nivel){
+      case(1):
+        MyScene.nivel = 0;
+        this.gameState = MyScene.Nivel1;
+        this.generateObstaculos(3);
+        break;
+      case(2):
+        MyScene.nivel = 0;
+        this.gameState = MyScene.Nivel2;
+        this.generateObstaculos(5);
+        break;
+      case(3):
+        MyScene.nivel = 0;
+        this.gameState = MyScene.Nivel3;
+        this.generateObstaculos(10);
+        break;
+    }
 
     if (this.gameState == MyScene.Nivel1) {
       // Se actualiza el resto del modelo
@@ -406,7 +425,6 @@ class MyScene extends THREE.Scene {
   }
 }
 
-
 // Enum pero de pega porque Javascript no me deja
 MyScene.Menu = 0;
 MyScene.Nivel1 = 1;
@@ -414,6 +432,14 @@ MyScene.Nivel2 = 2;
 MyScene.Nivel3 = 3;
 MyScene.Victoria = 4;
 MyScene.Derrota = 5;
+
+MyScene.nivel = 0;
+
+function setNivel(nivel){
+ MyScene.nivel = nivel;
+ var menu = document.getElementById("menu");
+ menu.style.display = "none";
+}
 
 
 /// La función   main
