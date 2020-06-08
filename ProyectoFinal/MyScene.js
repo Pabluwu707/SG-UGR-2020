@@ -32,12 +32,17 @@ class MyScene extends THREE.Scene {
 
     // Un suelo
     this.nodoDesplazado = new THREE.Object3D();
+    this.listaMeta = [];
 
     //var num_obstaculos = Math.floor(Math.random() * 10);
 
 
     // Inicialización del raycaster usado para detectar colisiones frontales
-    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), -10, 3 );
+    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 3 );
+
+    // Inicialización del raycaster usado para detectar colisiones frontales
+    this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
+
 
 
     // Establecemos el estado incial del juego
@@ -65,6 +70,7 @@ class MyScene extends THREE.Scene {
 
     this.add (this.motoJugador);
 
+    this.velocidadMoto = 2.5;
   }
 
   generateObstaculos(numObstaculos) {
@@ -142,22 +148,33 @@ class MyScene extends THREE.Scene {
 
     // La geometría es una motoJugador con muy poca altura
     var geometryGround = new THREE.BoxGeometry (500,1,300);
+    var geometryMeta = new THREE.BoxGeometry (200,1,200);
+
     // El material se hará con una textura de madera
     var texture = new THREE.TextureLoader().load('./carretera.png');
+    var textureMeta = new THREE.TextureLoader().load('./carretera.png');
 
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
+    var materialMeta= new THREE.MeshPhongMaterial ({map: textureMeta});
 
+    // Ya se puede construir el Mesh
     var ground = new THREE.Mesh (geometryGround, materialGround);
+    var meta = new THREE.Mesh (geometryMeta, materialMeta);
 
     // Todas las figuras se crean centradas en el origen.
     // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
     ground.position.y = -0.1;
     ground.position.z = -300;
+    meta.rotation.y += Math.PI/2;
+    meta.position.y = -0.1;
+    meta.position.z = 300*10;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
 
     this.nodoDesplazado.add (ground);
+    this.nodoDesplazado.add (meta);
+    this.listaMeta.push(meta);
 
     for(var i = 0; i < 10; i++){
       var ground = new THREE.Mesh (geometryGround, materialGround);
@@ -357,50 +374,54 @@ class MyScene extends THREE.Scene {
       this.cabeza.rotation.z += 0.01;
       this.cabeza.rotation.x += 0.01;
       this.cabeza.rotation.y += 0.01;
-         switch(MyScene.nivel){
-           case(1):
-             MyScene.nivel = 0;
-             this.gameState = MyScene.Nivel1;
-             this.remove(this.cabeza);
-             this.generateObstaculos(3);
-             this.createGround ();
-             this.generateJugador();
-             this.generateMontania();
-             this.createBackGround ();
-             break;
-           case(2):
-             MyScene.nivel = 0;
-             this.gameState = MyScene.Nivel2;
-             this.remove(this.cabeza);
-             this.generateObstaculos(5);
-             this.createGround ();
-             this.generateJugador();
-             this.generateMontania();
-             this.createBackGround ();
-             break;
-           case(3):
-             MyScene.nivel = 0;
-             this.gameState = MyScene.Nivel3;
-             this.remove(this.cabeza);
-             this.generateObstaculos(10);
-             this.createGround ();
-             this.generateJugador();
-             this.generateMontania();
-             this.createBackGround ();
-             break;
-         }
-         break;
+      switch(MyScene.nivel){
+        case(1):
+          MyScene.nivel = 0;
+          this.gameState = MyScene.Nivel1;
+          this.remove(this.cabeza);
+          this.generateObstaculos(3);
+          this.createGround ();
+          this.generateJugador();
+          this.generateMontania();
+          this.createBackGround ();
+          break;
+        case(2):
+          MyScene.nivel = 0;
+          this.gameState = MyScene.Nivel2;
+          this.remove(this.cabeza);
+          this.generateObstaculos(5);
+          this.createGround ();
+          this.generateJugador();
+          this.generateMontania();
+          this.createBackGround ();
+          break;
+        case(3):
+          MyScene.nivel = 0;
+          this.gameState = MyScene.Nivel3;
+          this.remove(this.cabeza);
+          this.generateObstaculos(10);
+          this.createGround ();
+          this.generateJugador();
+          this.generateMontania();
+          this.createBackGround ();
+          break;
+      }
+      break;
 
       case(MyScene.Nivel1):
          // Se actualiza el resto del modelo
          //this.octree.update();
          this.motoJugador.update();
          this.obstaculo.update();
-         this.nodoDesplazado.position.z -= 0.5;
+         this.nodoDesplazado.position.z -= 2.5;
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
          var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
+
+         // Tambien ajustamos el raycaster para detectar la meta
+         this.raycasterVictoria.ray.origin.copy(this.motoJugador.position);
+         var interseccionMeta = this.raycasterVictoria.intersectObjects( this.listaMeta );
 
          if (!this.motoJugador.invulnerable) {
            if (intersecciones.length > 0) {
@@ -428,6 +449,11 @@ class MyScene extends THREE.Scene {
               this.motoJugador.invulnerable = false;
             }
          }
+
+         if (interseccionMeta.length > 0) {
+            console.log("META");
+            this.gameState = MyScene.Victoria;
+         }
       break;
 
       case(MyScene.Nivel2):
@@ -437,6 +463,12 @@ class MyScene extends THREE.Scene {
       break;
 
       case(MyScene.Victoria):
+         this.motoJugador.update();
+         this.obstaculo.update();
+         if (this.velocidadMoto < 5) {
+            this.velocidadMoto += 0.25;
+         }
+         this.motoJugador.position.z += this.velocidadMoto;
       break;
 
       case(MyScene.Derrota):
