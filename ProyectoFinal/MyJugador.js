@@ -1,12 +1,10 @@
 
 class MyJugador extends THREE.Object3D {
-  constructor(gui, titleGui) {
+  constructor() {
     super();
 
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    this.createGUI(gui,titleGui);
-
 
     var cristal = new MyModel("../models/cristal.obj","../models/cristal.mtl", 0xF9C80E, 0.5);
     var carroceria = new MyModel("../models/carroceria.obj","../models/carroceria.mtl", 0xFF3864);

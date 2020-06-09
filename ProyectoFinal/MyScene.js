@@ -17,10 +17,6 @@ class MyScene extends THREE.Scene {
     // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
 
-    this.cabeza = new MyObstaculo();
-    this.cabeza.position.y = 50;
-    this.add(this.cabeza);
-
     // Construimos los distinos elementos que tendremos en la escena
 
     // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
@@ -30,6 +26,19 @@ class MyScene extends THREE.Scene {
     // Tendremos una cámara con un control de movimiento con el ratón
     this.createCamera ();
 
+    this.iniciarMenu();
+
+
+
+    // Establecemos el estado incial del juego
+    this.gameState = MyScene.Menu;
+
+    // Por último creamos el modelo.
+    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
+    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
+  }
+
+  iniciarNivel(dificultad){
     // Un suelo
     this.nodoDesplazado = new THREE.Object3D();
     this.listaMeta = [];
@@ -42,15 +51,45 @@ class MyScene extends THREE.Scene {
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
+    var menu = document.getElementById("menu");
+    menu.style.display = "none";
+    var vidas = document.getElementById("vidas");
+    vidas.style.display = "block";
+    this.remove(this.cabeza);
+    this.generateObstaculos(dificultad);
+    this.createGround ();
+    this.generateJugador();
+    this.generateMontania();
+    this.createBackGround ();
+    console.log("iniciado");
+  }
 
+  iniciarMenu(){
+    this.cabeza = new MyObstaculo();
+    this.cabeza.position.y = 50;
+    this.add(this.cabeza);
+    var menu = document.getElementById("menu");
+    menu.style.display = "block";
 
+  }
 
-    // Establecemos el estado incial del juego
+  resetearJuego(){
     this.gameState = MyScene.Menu;
+    var victoria = document.getElementById("victoria");
+    victoria.style.display = "none";
+    this.remove(this.motoJugador);
+    this.remove(this.nodoDesplazado);
+    this.remove(this.backGround);
+    var vidas = document.getElementById("vidas");
+    vidas.style.display = "none";
+    var v1 = document.getElementById("hp1");
+    v1.style.display = "block";
+    var v2 = document.getElementById("hp2");
+    v2.style.display = "block";
+    var v3 = document.getElementById("hp3");
+    v3.style.display = "block";
+    this.iniciarMenu();
 
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
   }
 
   generateMontania(){
@@ -64,7 +103,7 @@ class MyScene extends THREE.Scene {
 
   generateJugador(){
 
-    this.motoJugador = new MyJugador(this.gui, "Jugador yokese");
+    this.motoJugador = new MyJugador();
     this.motoJugador.position.y = 3.8;
     this.motoJugador.position.z = -220;
 
@@ -168,7 +207,7 @@ class MyScene extends THREE.Scene {
     ground.position.z = -300;
     meta.rotation.y += Math.PI/2;
     meta.position.y = -0.1;
-    meta.position.z = 300*10;
+    meta.position.z = 300*3;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
@@ -177,7 +216,7 @@ class MyScene extends THREE.Scene {
     this.nodoDesplazado.add (meta);
     this.listaMeta.push(meta);
 
-    for(var i = 0; i < 10; i++){
+    for(var i = 0; i < 3; i++){
       var ground = new THREE.Mesh (geometryGround, materialGround);
 
       // Todas las figuras se crean centradas en el origen.
@@ -379,32 +418,17 @@ class MyScene extends THREE.Scene {
         case(1):
           MyScene.nivel = 0;
           this.gameState = MyScene.Nivel1;
-          this.remove(this.cabeza);
-          this.generateObstaculos(3);
-          this.createGround ();
-          this.generateJugador();
-          this.generateMontania();
-          this.createBackGround ();
+          this.iniciarNivel(4);
           break;
         case(2):
           MyScene.nivel = 0;
           this.gameState = MyScene.Nivel2;
-          this.remove(this.cabeza);
-          this.generateObstaculos(5);
-          this.createGround ();
-          this.generateJugador();
-          this.generateMontania();
-          this.createBackGround ();
+          this.iniciarNivel(2);
           break;
         case(3):
           MyScene.nivel = 0;
           this.gameState = MyScene.Nivel3;
-          this.remove(this.cabeza);
-          this.generateObstaculos(10);
-          this.createGround ();
-          this.generateJugador();
-          this.generateMontania();
-          this.createBackGround ();
+          this.iniciarNivel(3);
           break;
       }
       break;
@@ -445,7 +469,7 @@ class MyScene extends THREE.Scene {
            }
          }
          else if (this.motoJugador.invulnerable) {
-            console.log((Date.now()-this.comienzoInvulnerable)/1000);
+            //console.log((Date.now()-this.comienzoInvulnerable)/1000);
             if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
               this.motoJugador.invulnerable = false;
             }
@@ -453,7 +477,10 @@ class MyScene extends THREE.Scene {
 
          if (interseccionMeta.length > 0) {
             console.log("META");
+            var vida1 = document.getElementById("victoria");
+            victoria.style.display = "block";
             this.gameState = MyScene.Victoria;
+            this.resetearJuego();
          }
       break;
 
@@ -471,7 +498,7 @@ class MyScene extends THREE.Scene {
          }
          if (this.escalaMoto > 0.3) {
             this.escalaMoto = this.escalaMoto * 0.995;
-            console.log(this.escalaMoto)
+            //console.log(this.escalaMoto)
          }
          this.motoJugador.position.z += this.velocidadMoto;
          this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
@@ -513,8 +540,6 @@ MyScene.nivel = 0;
 
 function setNivel(nivel){
  MyScene.nivel = nivel;
- var menu = document.getElementById("menu");
- menu.style.display = "none";
 }
 
 
