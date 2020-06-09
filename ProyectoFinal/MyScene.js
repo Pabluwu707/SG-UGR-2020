@@ -71,6 +71,7 @@ class MyScene extends THREE.Scene {
     this.add (this.motoJugador);
 
     this.velocidadMoto = 2.5;
+    this.escalaMoto = 1;
   }
 
   generateObstaculos(numObstaculos) {
@@ -114,7 +115,7 @@ class MyScene extends THREE.Scene {
 
       // Añadir obstáculo
       this.nodoDesplazado.add (this.obstaculo);
-      this.listaObstaculos.push(this.obstaculo.getMesh());
+      this.listaObstaculos.push(this.obstaculo);
      }
 
   }
@@ -371,8 +372,8 @@ class MyScene extends THREE.Scene {
 
     switch (this.gameState) {
       case(MyScene.Menu):
-      this.cabeza.rotation.z += 0.01;
-      this.cabeza.rotation.x += 0.01;
+      //this.cabeza.rotation.z += 0.01;
+      //this.cabeza.rotation.x += 0.01;
       this.cabeza.rotation.y += 0.01;
       switch(MyScene.nivel){
         case(1):
@@ -412,16 +413,16 @@ class MyScene extends THREE.Scene {
          // Se actualiza el resto del modelo
          //this.octree.update();
          this.motoJugador.update();
-         this.obstaculo.update();
+         //this.obstaculo.update();
          this.nodoDesplazado.position.z -= 2.5;
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
-         var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos );
+         var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos, true );
 
          // Tambien ajustamos el raycaster para detectar la meta
          this.raycasterVictoria.ray.origin.copy(this.motoJugador.position);
-         var interseccionMeta = this.raycasterVictoria.intersectObjects( this.listaMeta );
+         var interseccionMeta = this.raycasterVictoria.intersectObjects( this.listaMeta, true );
 
          if (!this.motoJugador.invulnerable) {
            if (intersecciones.length > 0) {
@@ -468,7 +469,12 @@ class MyScene extends THREE.Scene {
          if (this.velocidadMoto < 5) {
             this.velocidadMoto += 0.25;
          }
+         if (this.escalaMoto > 0.3) {
+            this.escalaMoto = this.escalaMoto * 0.995;
+            console.log(this.escalaMoto)
+         }
          this.motoJugador.position.z += this.velocidadMoto;
+         this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
       break;
 
       case(MyScene.Derrota):

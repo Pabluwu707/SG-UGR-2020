@@ -19,6 +19,8 @@ class MyModel extends THREE.Object3D {
     materials.transparent = true;
     materials.opacity = opacity;
 
+    var mesh;
+
     // Función de carga del objeto
     objLoader.load(
        // URL del objeto a cargar
@@ -28,8 +30,10 @@ class MyModel extends THREE.Object3D {
        function ( object ) {
           object.traverse( function( child ) {
             if ( child instanceof THREE.Mesh ) {
-                child.material = materials;
-                var edges = new THREE.EdgesGeometry( child.geometry );
+               child.material = materials;
+
+               // Líneas de distinto color
+               var edges = new THREE.EdgesGeometry( child.geometry );
                var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
                line.material.opacity = 0.20;
                line.material.transparent = true;
@@ -37,6 +41,7 @@ class MyModel extends THREE.Object3D {
             }
           } );
 
+          mesh = object;
 
       	 clase.add( object );
        },
@@ -52,6 +57,7 @@ class MyModel extends THREE.Object3D {
        }
     );
 
+    this.elmesh = mesh;
 
     this.userData = this;
 
@@ -74,6 +80,10 @@ class MyModel extends THREE.Object3D {
     // Estas lineas son las que añaden los componentes de la interfaz
     folder.add (this.guiControls, 'giroContinuo').name ('Giro continuo: ').listen();
   }
+
+   getMesh() {
+       return this.elmesh;
+   }
 
   update () {
     if (this.guiControls.giroContinuo)

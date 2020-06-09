@@ -97,7 +97,7 @@ class MyJugador extends THREE.Object3D {
      // Modificación del modelo
      if (this.invulnerable) {
      }
-     
+
      //console.log(this.rotation.z);
 
      // Opciones de movimiento

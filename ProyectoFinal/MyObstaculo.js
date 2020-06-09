@@ -6,7 +6,7 @@ class MyObstaculo extends THREE.Object3D {
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
 
-
+    /*
     // Un Mesh se compone de geometría y material
     var boxGeom = new THREE.BoxGeometry (10,10,10);
     // Como material se crea uno a partir de un color
@@ -18,7 +18,15 @@ class MyObstaculo extends THREE.Object3D {
 
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (box);
+    this.add (box);*/
+
+     this.obstaculo = new MyModel("../models/heliosbust.obj","../models/heliosbust.mtl", 0xFFFCF0, 1);
+
+
+     //this.add(box);
+
+     // Y añadirlo como hijo del Object3D (el this)
+     this.add (this.obstaculo);
 
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
@@ -60,8 +68,8 @@ class MyObstaculo extends THREE.Object3D {
   }
 
   getMesh() {
-     return this.mesh;
- }
+     return this.obstaculo.getMesh();
+  }
 
   update () {
     // Con independencia de cómo se escriban las 3 siguientes líneas, el orden en el que se aplican las transformaciones es:
