@@ -62,6 +62,7 @@ class MyScene extends THREE.Scene {
     this.generateMontania();
     this.createBackGround ();
     console.log("iniciado");
+    this.tiempoInicioNivel = Date.now();
   }
 
   iniciarMenu(){
@@ -96,7 +97,7 @@ class MyScene extends THREE.Scene {
 
     // Objeto montania
     this.montaniaFondo = new MyMontania();
-    this.montaniaFondo.position.z = 250;
+    this.montaniaFondo.position.z = 1300;
     this.nodoDesplazado.add (this.montaniaFondo);
 
   }
@@ -115,11 +116,11 @@ class MyScene extends THREE.Scene {
 
   generateObstaculos(numObstaculos) {
 
-      // Incluimos en un array los objetos visualizados por el raycaster
-      this.listaObstaculos = [];
-      this.posiblesCarriles = [];
+    // Incluimos en un array los objetos visualizados por el raycaster
+    this.listaObstaculos = [];
+    this.posiblesCarriles = [];
 
-     for(var i = 0; i < numObstaculos;i++){
+    for(var i = 0; i < numObstaculos;i++){
       // Crear nuevo obstáculo
       this.obstaculo = new MyObstaculo();
 
@@ -133,24 +134,20 @@ class MyScene extends THREE.Scene {
       switch (numeroCarril) {
          case 1 :
           this.obstaculo.position.x = 33;
-          //console.log("left");
           break;
          case 2 :
           this.obstaculo.position.x = 11;
-          //console.log("up");
           break;
          case 3 :
           this.obstaculo.position.x = -10;
-          //console.log("right");
           break;
          case 4 :
           this.obstaculo.position.x = -33;
-          //console.log("down");
           break;
       }
 
       // Determinar posición Y
-      this.obstaculo.position.y = 2;
+      this.obstaculo.position.y = 3;
 
       // Añadir obstáculo
       this.nodoDesplazado.add (this.obstaculo);
@@ -352,19 +349,15 @@ class MyScene extends THREE.Scene {
     switch (key) {
       case 37 : // Cursor a la izquierda
         this.motoJugador.left = true;
-        //console.log("left");
         break;
       case 38 : // Cursor arriba
         this.motoJugador.forward = true;
-        //console.log("up");
         break;
       case 39 : // Cursor a la derecha
         this.motoJugador.right = true;
-        //console.log("right");
         break;
       case 40 : // Cursor abajo
         this.motoJugador.backward = true;
-        //console.log("down");
         break;
     }
   }
@@ -490,7 +483,7 @@ class MyScene extends THREE.Scene {
             var vida1 = document.getElementById("victoria");
             victoria.style.display = "block";
             this.gameState = MyScene.Victoria;
-            this.resetearJuego();
+            this.tiempoFinNivel = Date.now();
          }
       break;
 
@@ -512,6 +505,9 @@ class MyScene extends THREE.Scene {
          }
          this.motoJugador.position.z += this.velocidadMoto;
          this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
+         if((Date.now()-this.tiempoFinNivel)/1000 >= 6){
+            this.resetearJuego();
+         }
       break;
 
       case(MyScene.Derrota):
@@ -519,23 +515,6 @@ class MyScene extends THREE.Scene {
       break;
 
     }
-
-    /*
-    // OCTREE
-    this.octreeObjects = this.octree.search(this.motoJugador.position, 0.00001, true);
-
-    if (this.octreeObjects.length > 1){
-      console.log("Colision");
-    }
-    // Guardar TowerBall cercanas
-    let tbs = [];
-    for(let tb of this.octreeObjects) {
-      console.log(tb);
-        tbs.push(tb.object.userData);
-    }
-    console.log(tbs.length);
-    */
-
   }
 }
 

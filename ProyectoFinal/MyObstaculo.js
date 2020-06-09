@@ -6,27 +6,36 @@ class MyObstaculo extends THREE.Object3D {
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
 
-    /*
+
     // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (10,10,10);
+    var boxGeom = new THREE.BoxGeometry (16,16,16);
     // Como material se crea uno a partir de un color
-    var boxMat = new THREE.MeshNormalMaterial();
+    var boxMat = new THREE.MeshToonMaterial({color: 0xFD1D53});
+    boxMat.opacity = 0.70;
+    boxMat.transparent = true;
 
     // Ya podemos construir el Mesh
     this.mesh = new THREE.Mesh (boxGeom, boxMat);
-    var box = this.mesh;
+
+
+    var edges = new THREE.EdgesGeometry( boxGeom );
+    var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+    line.material.opacity = 0.5;
+    line.material.transparent = true;
+    this.add (line);
 
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (box);*/
+    this.add (this.mesh);
 
-     this.obstaculo = new MyModel("../models/heliosbust.obj","../models/heliosbust.mtl", 0xFFFCF0, 1);
+    /*
+    this.obstaculo = new MyModel("../models/heliosbust.obj","../models/heliosbust.mtl", 0xFFFCF0, 1);
 
 
-     //this.add(box);
+    //this.add(box);
 
-     // Y añadirlo como hijo del Object3D (el this)
-     this.add (this.obstaculo);
+    // Y añadirlo como hijo del Object3D (el this)
+    this.add (this.obstaculo);*/
 
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
@@ -68,7 +77,7 @@ class MyObstaculo extends THREE.Object3D {
   }
 
   getMesh() {
-     return this.obstaculo.getMesh();
+     return this.mesh;
   }
 
   update () {
