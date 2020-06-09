@@ -384,6 +384,13 @@ class MyScene extends THREE.Scene {
       case 40 : // Cursor abajo
         this.motoJugador.backward = false;
         break;
+      case 32 : // Espacio
+        if(this.gameState == MyScene.Derrota){
+          var derrota = document.getElementById("derrota");
+          derrota.style.display = "none";
+          this.resetearJuego();
+        }
+        break;
     }
   }
 
@@ -418,7 +425,7 @@ class MyScene extends THREE.Scene {
         case(1):
           MyScene.nivel = 0;
           this.gameState = MyScene.Nivel1;
-          this.iniciarNivel(4);
+          this.iniciarNivel(20);
           break;
         case(2):
           MyScene.nivel = 0;
@@ -465,6 +472,9 @@ class MyScene extends THREE.Scene {
              }
              else if(vida3.style.display != "none"){
                vida3.style.display = "none";
+               var derrota = document.getElementById("derrota");
+               derrota.style.display = "block";
+               this.gameState = MyScene.Derrota;
              }
            }
          }
@@ -505,6 +515,7 @@ class MyScene extends THREE.Scene {
       break;
 
       case(MyScene.Derrota):
+
       break;
 
     }
