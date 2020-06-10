@@ -11,17 +11,6 @@ class MyJugador extends THREE.Object3D {
     this.partesNegras = new MyModel("../models/partesNegras.obj","../models/partesNegras.mtl", 0x2E2157);
     this.soportes = new MyModel("../models/partesSoporte.obj","../models/partesSoporte.mtl");
 
-    // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (3,3,3);
-    // Como material se crea uno a partir de un color
-    var boxMat = new THREE.MeshNormalMaterial();
-
-    // Ya podemos construir el Mesh
-    this.mesh = new THREE.Mesh (boxGeom, boxMat);
-    var box = this.mesh;
-
-    //this.add(box);
-
     // Y añadirlo como hijo del Object3D (el this)
     this.add (this.cristal);
     this.add (this.soportes);
@@ -174,12 +163,6 @@ class MyJugador extends THREE.Object3D {
        }*/
        this.rotation.z = 0;
      }
-
-     if (this.forward)
-      this.position.z += 0.5;
-
-     if (this.backward)
-      this.position.z -= 0.5;
 
 
     //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);

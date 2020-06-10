@@ -16,6 +16,7 @@
     <script type="text/javascript" src="MyJugador.js"></script>
     <script type="text/javascript" src="MyObstaculo.js"></script>
     <script type="text/javascript" src="MyModel.js"></script>
+    <script type="text/javascript" src="MyPowerUp.js"></script>
     <script type="text/javascript" src="MyMontania.js"></script>
     <style>
         body{
@@ -45,25 +46,26 @@
 </div>
 
 <div id="menu">
-  <div style="position:absolute; left:48%; top:40%; color:magenta; cursor:pointer;">
+  <div style="position:absolute; width:100%; text-align: center; top:40%; color:magenta; cursor:pointer;">
       <p onclick="setNivel(1)">Nivel 1</p>
   </div>
-  <div style="position:absolute; left:48%; top:45%; color:magenta; cursor:pointer;">
+  <div style="position:absolute; width:100%; text-align: center; top:45%; color:magenta; cursor:pointer;">
       <p onclick="setNivel(2)">Nivel 2</p>
   </div>
 
-  <div style="position:absolute; left:48%; top:50%; color:magenta; cursor:pointer;">
+  <div style="position:absolute; width:100%; text-align: center; top:50%; color:magenta; cursor:pointer;">
       <p onclick="setNivel(3)">Nivel 3</p>
   </div>
 </div>
 
-<div style="position:absolute; left:34%; top:30%; color:magenta; font-size:300%; display:none;" id="victoria" >
-  <h1>Victoria</h1>
+<div style="display:none;" id="victoria" >
+  <h1 style="position:absolute; width:100%; text-align: center; top:30%; color:magenta; font-size:300%;">Victoria</h1>
+  <h2 style="position:absolute; width:100%; text-align: center; top:46%; color:magenta; font-size:150%;">Pulsa "espacio" para reiniciar</h2>
 </div>
 
 <div style="display:none;" id="derrota" >
-  <h1 style="position:absolute; left:41%; top:30%; color:magenta; font-size:350%;">Derrota</h1>
-  <h2 style="position:absolute; left:34.5%; top:46%; color:magenta; font-size:150%;">Pulsa "espacio" para reiniciar</h2>
+  <h1 style="position:absolute; width:100%; text-align: center; top:30%; color:magenta; font-size:350%;">Derrota</h1>
+  <h2 style="position:absolute; width:100%; text-align: center; top:46%; color:magenta; font-size:150%;">Pulsa "espacio" para reiniciar</h2>
 </div>
 
 

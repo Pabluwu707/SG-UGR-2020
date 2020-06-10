@@ -28,25 +28,25 @@ class MyScene extends THREE.Scene {
 
     this.iniciarMenu();
 
-
-
-    // Establecemos el estado incial del juego
-    this.gameState = MyScene.Menu;
-
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
   }
 
   iniciarNivel(dificultad){
+    this.gameState = MyScene.Nivel;
     switch(dificultad){
       case(1):
          var longitudNivel = 7;
          var obstaculosAGenerar = 18;
       break;
       case(2):
+         var longitudNivel = 14;
+         var obstaculosAGenerar = 36;
       break;
       case(3):
+         var longitudNivel = 28;
+         var obstaculosAGenerar = 100;
       break;
     }
     // Un suelo
@@ -76,6 +76,8 @@ class MyScene extends THREE.Scene {
   }
 
   iniciarMenu(){
+    this.gameState = MyScene.Menu;
+    MyScene.nivelActual = 0;
     this.cabeza = new MyObstaculo();
     this.cabeza.position.y = 50;
     this.add(this.cabeza);
@@ -85,9 +87,6 @@ class MyScene extends THREE.Scene {
   }
 
   resetearJuego(){
-    this.gameState = MyScene.Menu;
-    var victoria = document.getElementById("victoria");
-    victoria.style.display = "none";
     this.remove(this.motoJugador);
     this.remove(this.nodoDesplazado);
     this.remove(this.backGround);
@@ -412,14 +411,8 @@ class MyScene extends THREE.Scene {
       case 37 : // Cursor a la izquierda
         this.motoJugador.left = true;
         break;
-      case 38 : // Cursor arriba
-        this.motoJugador.forward = true;
-        break;
       case 39 : // Cursor a la derecha
         this.motoJugador.right = true;
-        break;
-      case 40 : // Cursor abajo
-        this.motoJugador.backward = true;
         break;
     }
   }
@@ -430,19 +423,18 @@ class MyScene extends THREE.Scene {
       case 37 : // Cursor a la izquierda
         this.motoJugador.left = false;
         break;
-      case 38 : // Cursor arriba
-        this.motoJugador.forward = false;
-        break;
       case 39 : // Cursor a la derecha
         this.motoJugador.right = false;
-        break;
-      case 40 : // Cursor abajo
-        this.motoJugador.backward = false;
         break;
       case 32 : // Espacio
         if(this.gameState == MyScene.Derrota){
           var derrota = document.getElementById("derrota");
           derrota.style.display = "none";
+          this.resetearJuego();
+        }
+        if(this.gameState == MyScene.Victoria){
+          var victoria = document.getElementById("victoria");
+          victoria.style.display = "none";
           this.resetearJuego();
         }
         break;
@@ -476,31 +468,37 @@ class MyScene extends THREE.Scene {
       //this.cabeza.rotation.z += 0.01;
       //this.cabeza.rotation.x += 0.01;
       this.cabeza.rotation.y += 0.01;
-      switch(MyScene.nivel){
+      switch(MyScene.nivelActual){
         case(1):
-          MyScene.nivel = 0;
-          this.gameState = MyScene.Nivel1;
           this.iniciarNivel(1);
           break;
         case(2):
-          MyScene.nivel = 0;
-          this.gameState = MyScene.Nivel2;
           this.iniciarNivel(2);
           break;
         case(3):
-          MyScene.nivel = 0;
-          this.gameState = MyScene.Nivel3;
           this.iniciarNivel(3);
           break;
       }
       break;
 
-      case(MyScene.Nivel1):
+      case(MyScene.Nivel):
          // Se actualiza el resto del modelo
          //this.octree.update();
          this.motoJugador.update();
          //this.obstaculo.update();
-         this.nodoDesplazado.position.z -= 2.5;
+         switch (MyScene.nivelActual) {
+           case 1:
+            this.nodoDesplazado.position.z -= 2.5;
+           break;
+           case 2:
+            this.nodoDesplazado.position.z -= 5;
+           break;
+           case 3:
+            this.nodoDesplazado.position.z -= 8;
+           break;
+         default:
+
+         }
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
@@ -551,12 +549,6 @@ class MyScene extends THREE.Scene {
          }
       break;
 
-      case(MyScene.Nivel2):
-      break;
-
-      case(MyScene.Nivel3):
-      break;
-
       case(MyScene.Victoria):
          this.motoJugador.update();
          this.obstaculo.update();
@@ -569,9 +561,6 @@ class MyScene extends THREE.Scene {
          }
          this.motoJugador.position.z += this.velocidadMoto;
          this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
-         if((Date.now()-this.tiempoFinNivel)/1000 >= 6){
-            this.resetearJuego();
-         }
       break;
 
       case(MyScene.Derrota):
@@ -584,16 +573,14 @@ class MyScene extends THREE.Scene {
 
 // Enum pero de pega porque Javascript no me deja
 MyScene.Menu = 0;
-MyScene.Nivel1 = 1;
-MyScene.Nivel2 = 2;
-MyScene.Nivel3 = 3;
-MyScene.Victoria = 4;
-MyScene.Derrota = 5;
+MyScene.Nivel = 1;
+MyScene.Victoria = 2;
+MyScene.Derrota = 3;
 
-MyScene.nivel = 0;
+MyScene.nivelActual = 0;
 
 function setNivel(nivel){
- MyScene.nivel = nivel;
+ MyScene.nivelActual = nivel;
 }
 
 
