@@ -137,7 +137,7 @@ class MyScene extends THREE.Scene {
          this.obstaculo = new MyObstaculo();
 
          // Determinar posición Z
-         var position = Math.floor(Math.random() * (200 - 100)) + 100*i+500;
+         var position = Math.floor(Math.random() * (200 - 100)) + 100*i + 500;
          this.obstaculo.position.z = position;
 
          // Determinar posicion X
@@ -486,19 +486,6 @@ class MyScene extends THREE.Scene {
          //this.octree.update();
          this.motoJugador.update();
          //this.obstaculo.update();
-         switch (MyScene.nivelActual) {
-           case 1:
-            this.nodoDesplazado.position.z -= 2.5;
-           break;
-           case 2:
-            this.nodoDesplazado.position.z -= 5;
-           break;
-           case 3:
-            this.nodoDesplazado.position.z -= 8;
-           break;
-         default:
-
-         }
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
@@ -546,6 +533,21 @@ class MyScene extends THREE.Scene {
             victoria.style.display = "block";
             this.gameState = MyScene.Victoria;
             this.tiempoFinNivel = Date.now();
+         }
+
+
+         switch (MyScene.nivelActual) {
+           case 1:
+            this.nodoDesplazado.position.z -= 2.5;
+           break;
+           case 2:
+            this.nodoDesplazado.position.z -= 5;
+           break;
+           case 3:
+            this.nodoDesplazado.position.z -= 7;
+           break;
+         default:
+
          }
       break;
 

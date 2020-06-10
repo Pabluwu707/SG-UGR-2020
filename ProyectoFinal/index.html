@@ -23,6 +23,33 @@
             margin: 0;
             overflow: hidden;
         }
+        .foto1 {
+            -webkit-transition: all 1s ease; /* Safari and Chrome */
+            -moz-transition: all 1s ease; /* Firefox */
+            -o-transition: all 1s ease; /* IE 9 */
+            -ms-transition: all 1s ease; /* Opera */
+            transition: all 1s ease;
+	      }
+	      .foto1:hover {
+		      -webkit-transform:scale(1.25); /* Safari and Chrome */
+      	   -moz-transform:scale(1.25); /* Firefox */
+      		-ms-transform:scale(1.25); /* IE 9 */
+      		-o-transform:scale(1.25); /* Opera */
+      		transform:scale(1.25);
+      	}
+
+         @keyframes example {
+           0%   {transform: rotate(5deg);}
+           50%  {transform: rotate(-5deg);}
+           100% {transform: rotate(5deg);}
+         }
+
+         /* The element to apply the animation to */
+         .logo {
+           animation: example 8s infinite;
+           animation-timing-function: ease-in-out;
+         }
+
     </style>
 </head>
 <body>
@@ -47,19 +74,19 @@
 
 <div id="menu">
 
-  <div style="position:absolute; width:100%; text-align: center; top:1%; color:magenta; size:10%;">
+  <div class="logo" style="position:absolute; width:100%; text-align: center; top:10%; color:magenta; size:10%;">
       <img width="500" src="../imgs/Neologo.png"/>
   </div>
 
-  <div style="position:absolute; width:33.33%; text-align: center; top:50%; color:magenta; cursor:pointer;">
-      <img onclick="setNivel(1)" width="200" src="../imgs/nivel1.png"/>
+  <div class="foto1" style="position:absolute; width:33.33%; text-align: center; top:50%; color:magenta; cursor:pointer;">
+      <img onclick="setNivel(1)" width="400" src="../imgs/nivel1.png"/>
   </div>
-  <div style="position:absolute; width:33.33%; left:33.33%; text-align: center; top:50%; color:magenta; cursor:pointer;">
-      <img onclick="setNivel(2)" width="200" src="../imgs/nivel2.png"/>
+  <div class="foto1" style="position:absolute; width:33.33%; left:33.33%; text-align: center; top:50%; color:magenta; cursor:pointer;">
+      <img onclick="setNivel(2)" width="400" src="../imgs/nivel2.png"/>
   </div>
 
-  <div style="position:absolute; width:33.33%; left:66.66%; text-align: center; top:50%; color:magenta; cursor:pointer;">
-      <img onclick="setNivel(3)" width="200" src="../imgs/nivel3.png"/>
+  <div class="foto1" style="position:absolute; width:33.33%; left:66.66%; text-align: center; top:50%; color:magenta; cursor:pointer;">
+      <img onclick="setNivel(3)" width="400" src="../imgs/nivel3.png"/>
   </div>
 </div>
 
