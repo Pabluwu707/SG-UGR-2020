@@ -6,10 +6,10 @@ class MyJugador extends THREE.Object3D {
     // Se crea la parte de la interfaz que corresponde a la caja
     // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
 
-    var cristal = new MyModel("../models/cristal.obj","../models/cristal.mtl", 0xF9C80E, 0.5);
-    var carroceria = new MyModel("../models/carroceria.obj","../models/carroceria.mtl", 0xFF3864);
-    var partesNegras = new MyModel("../models/partesNegras.obj","../models/partesNegras.mtl", 0x2E2157);
-    var soportes = new MyModel("../models/partesSoporte.obj","../models/partesSoporte.mtl");
+    this.cristal = new MyModel("../models/cristal.obj","../models/cristal.mtl", 0xF9C80E, 0.5);
+    this.carroceria = new MyModel("../models/carroceria.obj","../models/carroceria.mtl", 0xFF3864);
+    this.partesNegras = new MyModel("../models/partesNegras.obj","../models/partesNegras.mtl", 0x2E2157);
+    this.soportes = new MyModel("../models/partesSoporte.obj","../models/partesSoporte.mtl");
 
     // Un Mesh se compone de geometría y material
     var boxGeom = new THREE.BoxGeometry (3,3,3);
@@ -23,10 +23,10 @@ class MyJugador extends THREE.Object3D {
     //this.add(box);
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (cristal);
-    this.add (soportes);
-    this.add (partesNegras);
-    this.add (carroceria);
+    this.add (this.cristal);
+    this.add (this.soportes);
+    this.add (this.partesNegras);
+    this.add (this.carroceria);
 
     this.invulnerabilidad = false;
 
@@ -91,10 +91,51 @@ class MyJugador extends THREE.Object3D {
      return this.mesh;
  }
 
-  update () {
-     // Modificación del modelo
-     if (this.invulnerable) {
-     }
+   hacerMotoInvisible () {
+      this.carroceria.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 0.2;
+         }
+      } );
+
+      this.partesNegras.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 0.2;
+         }
+      } );
+
+      this.soportes.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 0.2;
+         }
+      } );
+   }
+
+   hacerMotoVisible () {
+      this.carroceria.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 1;
+         }
+      } );
+
+      this.partesNegras.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 1;
+         }
+      } );
+
+      this.soportes.traverse( function ( child ) {
+         if ( child instanceof THREE.Mesh ) {
+            child.material.opacity = 1;
+         }
+      } );
+   }
+
+   update () {
+      // Modificación del modelo
+      if (this.invulnerable) {
+
+      }
 
      //console.log(this.rotation.z);
 

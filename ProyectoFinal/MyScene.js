@@ -39,6 +39,16 @@ class MyScene extends THREE.Scene {
   }
 
   iniciarNivel(dificultad){
+    switch(dificultad){
+      case(1):
+         var longitudNivel = 7;
+         var obstaculosAGenerar = 18;
+      break;
+      case(2):
+      break;
+      case(3):
+      break;
+    }
     // Un suelo
     this.nodoDesplazado = new THREE.Object3D();
     this.listaMeta = [];
@@ -56,10 +66,10 @@ class MyScene extends THREE.Scene {
     var vidas = document.getElementById("vidas");
     vidas.style.display = "block";
     this.remove(this.cabeza);
-    this.generateObstaculos(dificultad);
-    this.createGround ();
+    this.generateObstaculos(obstaculosAGenerar);
+    this.createGround (longitudNivel);
     this.generateJugador();
-    this.generateMontania();
+    this.generateMontania(longitudNivel);
     this.createBackGround ();
     console.log("iniciado");
     this.tiempoInicioNivel = Date.now();
@@ -93,11 +103,11 @@ class MyScene extends THREE.Scene {
 
   }
 
-  generateMontania(){
+  generateMontania(longitudNivel){
 
     // Objeto montania
     this.montaniaFondo = new MyMontania();
-    this.montaniaFondo.position.z = 1300;
+    this.montaniaFondo.position.z = longitudNivel*300 + 400;
     this.nodoDesplazado.add (this.montaniaFondo);
 
   }
@@ -118,42 +128,95 @@ class MyScene extends THREE.Scene {
 
     // Incluimos en un array los objetos visualizados por el raycaster
     this.listaObstaculos = [];
-    this.posiblesCarriles = [];
 
     for(var i = 0; i < numObstaculos;i++){
-      // Crear nuevo obstáculo
-      this.obstaculo = new MyObstaculo();
+      // Número aleatorio
+      var numeroAleatorio = Math.floor(Math.random() * 10 + 1);
 
-      // Determinar posición Z
-      var position = Math.floor(Math.random() * (100 - 50)) + 50*i - 200;
-      this.obstaculo.position.z = position;
+      if (numeroAleatorio < 9) { //Generar un único obstáculo
+         // Crear nuevo obstáculo
+         this.obstaculo = new MyObstaculo();
 
-      // Determinar posicion X
-      var numeroCarril = Math.floor(Math.random() * 4 + 1);
-      console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
-      switch (numeroCarril) {
-         case 1 :
-          this.obstaculo.position.x = 33;
-          break;
-         case 2 :
-          this.obstaculo.position.x = 11;
-          break;
-         case 3 :
-          this.obstaculo.position.x = -10;
-          break;
-         case 4 :
-          this.obstaculo.position.x = -33;
-          break;
+         // Determinar posición Z
+         var position = Math.floor(Math.random() * (200 - 100)) + 100*i;
+         this.obstaculo.position.z = position;
+
+         // Determinar posicion X
+         var numeroCarril = Math.floor(Math.random() * 4 + 1);
+         console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
+         switch (numeroCarril) {
+            case 1 :
+             this.obstaculo.position.x = 33;
+             break;
+            case 2 :
+             this.obstaculo.position.x = 11;
+             break;
+            case 3 :
+             this.obstaculo.position.x = -11;
+             break;
+            case 4 :
+             this.obstaculo.position.x = -33;
+             break;
+         }
+
+         // Determinar posición Y
+         this.obstaculo.position.y = 3;
+
+         // Añadir obstáculo
+         this.nodoDesplazado.add (this.obstaculo);
+         this.listaObstaculos.push(this.obstaculo);
+      } else { // Generar obstáculo doble (dos obstáculos en la misma altura)
+         // Crear obstáculo doble
+         console.log("Se va a generar un obstaculo doble");
+         this.obstaculo1 = new MyObstaculo();
+         this.obstaculo2 = new MyObstaculo();
+
+         // Determinar posición Z
+         var position = Math.floor(Math.random() * (200 - 100)) + 100*i;
+         this.obstaculo1.position.z = position;
+         this.obstaculo2.position.z = position;
+
+         // Determinar posicion X
+         var numeroCarril = Math.floor(Math.random() * 6 + 1);
+         console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
+         switch (numeroCarril) {
+            case 1 :
+             this.obstaculo1.position.x = 33;
+             this.obstaculo2.position.x = 11;
+             break;
+            case 2 :
+             this.obstaculo1.position.x = 11;
+             this.obstaculo2.position.x = -11;
+             break;
+            case 3 :
+             this.obstaculo1.position.x = -11;
+             this.obstaculo2.position.x = -33;
+             break;
+            case 4 :
+             this.obstaculo1.position.x = 33;
+             this.obstaculo2.position.x = -33;
+             break;
+            case 5 :
+             this.obstaculo1.position.x = 33;
+             this.obstaculo2.position.x = -11;
+             break;
+            case 6 :
+             this.obstaculo1.position.x = 11;
+             this.obstaculo2.position.x = -33;
+             break;
+         }
+
+         // Determinar posición Y
+         this.obstaculo1.position.y = 3;
+         this.obstaculo2.position.y = 3;
+
+         // Añadir obstáculo
+         this.nodoDesplazado.add (this.obstaculo1);
+         this.listaObstaculos.push(this.obstaculo1);
+         this.nodoDesplazado.add (this.obstaculo2);
+         this.listaObstaculos.push(this.obstaculo2);
       }
-
-      // Determinar posición Y
-      this.obstaculo.position.y = 3;
-
-      // Añadir obstáculo
-      this.nodoDesplazado.add (this.obstaculo);
-      this.listaObstaculos.push(this.obstaculo);
-     }
-
+    }
   }
 
   createCamera () {
@@ -180,7 +243,7 @@ class MyScene extends THREE.Scene {
 
   }
 
-  createGround () {
+  createGround (longitud) {
     // El suelo es un Mesh, necesita una geometría y un material.
 
     // La geometría es una motoJugador con muy poca altura
@@ -204,7 +267,7 @@ class MyScene extends THREE.Scene {
     ground.position.z = -300;
     meta.rotation.y += Math.PI/2;
     meta.position.y = -0.1;
-    meta.position.z = 300*3;
+    meta.position.z = 300*longitud-20;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
@@ -213,7 +276,7 @@ class MyScene extends THREE.Scene {
     this.nodoDesplazado.add (meta);
     this.listaMeta.push(meta);
 
-    for(var i = 0; i < 3; i++){
+    for(var i = 0; i < longitud; i++){
       var ground = new THREE.Mesh (geometryGround, materialGround);
 
       // Todas las figuras se crean centradas en el origen.
@@ -223,7 +286,6 @@ class MyScene extends THREE.Scene {
 
 
       // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-
       this.nodoDesplazado.add (ground);
     }
     // Ya se puede construir el Mesh
@@ -418,7 +480,7 @@ class MyScene extends THREE.Scene {
         case(1):
           MyScene.nivel = 0;
           this.gameState = MyScene.Nivel1;
-          this.iniciarNivel(20);
+          this.iniciarNivel(1);
           break;
         case(2):
           MyScene.nivel = 0;
@@ -455,6 +517,7 @@ class MyScene extends THREE.Scene {
              var vida3 = document.getElementById("hp3");
 
              this.comienzoInvulnerable = Date.now();
+             this.motoJugador.hacerMotoInvisible();
              this.motoJugador.invulnerable = true;
 
              if(vida1.style.display != "none"){
@@ -475,6 +538,7 @@ class MyScene extends THREE.Scene {
             //console.log((Date.now()-this.comienzoInvulnerable)/1000);
             if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
               this.motoJugador.invulnerable = false;
+              this.motoJugador.hacerMotoVisible();
             }
          }
 

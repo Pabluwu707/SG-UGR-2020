@@ -8,7 +8,7 @@ class MyObstaculo extends THREE.Object3D {
 
 
     // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (16,16,16);
+    var boxGeom = new THREE.BoxGeometry (19,16,16);
     // Como material se crea uno a partir de un color
     var boxMat = new THREE.MeshToonMaterial({color: 0xFD1D53});
     boxMat.opacity = 0.70;
