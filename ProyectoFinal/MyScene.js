@@ -46,7 +46,7 @@ class MyScene extends THREE.Scene {
       break;
       case(3):
          var longitudNivel = 28;
-         var obstaculosAGenerar = 100;
+         var obstaculosAGenerar = 76
       break;
     }
     // Un suelo
@@ -137,7 +137,7 @@ class MyScene extends THREE.Scene {
          this.obstaculo = new MyObstaculo();
 
          // Determinar posición Z
-         var position = Math.floor(Math.random() * (200 - 100)) + 100*i;
+         var position = Math.floor(Math.random() * (200 - 100)) + 100*i+500;
          this.obstaculo.position.z = position;
 
          // Determinar posicion X
@@ -333,7 +333,7 @@ class MyScene extends THREE.Scene {
     // En este caso la intensidad de la luz y si se muestran o no los ejes
     this.guiControls = new function() {
       // En el contexto de una función   this   alude a la función
-      this.lightIntensity = 0.5;
+      this.lightIntensity = 0;
     }
 
     // Se crea una sección para los controles de esta clase
