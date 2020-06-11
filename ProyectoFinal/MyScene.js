@@ -34,11 +34,16 @@ class MyScene extends THREE.Scene {
   }
 
   iniciarNivel(dificultad){
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
+      this.sound.setBuffer( buffer );
+      this.sound.stop();
+    });
     this.gameState = MyScene.Nivel;
     switch(dificultad){
       case(1):
          var longitudNivel = 7;
-         var obstaculosAGenerar = 18;
+         var obstaculosAGenerar = 13;
       break;
       case(2):
          var longitudNivel = 14;
@@ -57,7 +62,7 @@ class MyScene extends THREE.Scene {
 
 
     // Inicialización del raycaster usado para detectar colisiones frontales
-    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 3 );
+    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 10 );
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
@@ -65,7 +70,6 @@ class MyScene extends THREE.Scene {
     menu.style.display = "none";
     var vidas = document.getElementById("vidas");
     vidas.style.display = "block";
-    this.remove(this.cabeza);
     this.generateObstaculos(obstaculosAGenerar);
     this.createGround (longitudNivel);
     this.generateJugador();
@@ -76,11 +80,16 @@ class MyScene extends THREE.Scene {
   }
 
   iniciarMenu(){
+
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '../music/80s-remix-backstreet-boys-i-want-it-that-way.mp3', ( buffer ) => {
+      this.sound.setBuffer( buffer );
+      this.sound.setLoop( true );
+      this.sound.setVolume( 0.5 );
+      this.sound.play();
+    });
     this.gameState = MyScene.Menu;
     MyScene.nivelActual = 0;
-    this.cabeza = new MyObstaculo();
-    this.cabeza.position.y = 50;
-    this.add(this.cabeza);
     var menu = document.getElementById("menu");
     menu.style.display = "block";
 
@@ -108,6 +117,11 @@ class MyScene extends THREE.Scene {
     var v5 = document.getElementById("hp5");
     v5.style.display = "block";
     this.iniciarMenu();
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
+      this.sound.setBuffer( buffer );
+      this.sound.stop();
+    });
 
   }
 
@@ -251,6 +265,12 @@ class MyScene extends THREE.Scene {
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,-0);
     this.camera.lookAt(look);
+    var listener = new THREE.AudioListener();
+    this.camera.add(listener);
+
+    this.sound = new THREE.Audio(listener);
+
+    this.audioLoader = new THREE.AudioLoader();
     this.add (this.camera);
 
     // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
@@ -487,20 +507,45 @@ class MyScene extends THREE.Scene {
 
     switch (this.gameState) {
       case(MyScene.Menu):
-      //this.cabeza.rotation.z += 0.01;
-      //this.cabeza.rotation.x += 0.01;
-      this.cabeza.rotation.y += 0.01;
       switch(MyScene.nivelActual){
         case(-1):
+          var audioLoader = new THREE.AudioLoader();
+          audioLoader.load( '../music/sweden-c418-synthwave80s.mp3', ( buffer ) => {
+            this.sound.setBuffer( buffer );
+            this.sound.setLoop( true );
+            this.sound.setVolume( 0.5 );
+            this.sound.play();
+          });
           this.iniciarTutorial();
           break;
         case(1):
+          var audioLoader = new THREE.AudioLoader();
+          audioLoader.load( '../music/windows96-dragon-ball-z-theme-synth-version.mp3', ( buffer ) => {
+            this.sound.setBuffer( buffer );
+            this.sound.setLoop( true );
+            this.sound.setVolume( 0.5 );
+            this.sound.play();
+          });
           this.iniciarNivel(1);
           break;
         case(2):
+          var audioLoader = new THREE.AudioLoader();
+          audioLoader.load( '../music/gorillaz-stylo-official-video.mp3', ( buffer ) => {
+            this.sound.setBuffer( buffer );
+            this.sound.setLoop( true );
+            this.sound.setVolume( 0.5 );
+            this.sound.play();
+          });
           this.iniciarNivel(2);
           break;
         case(3):
+          var audioLoader = new THREE.AudioLoader();
+          audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
+            this.sound.setBuffer( buffer );
+            this.sound.setLoop( true );
+            this.sound.setVolume( 0.5 );
+            this.sound.play();
+          });
           this.iniciarNivel(3);
           break;
       }
@@ -588,7 +633,7 @@ class MyScene extends THREE.Scene {
            }
          }
          else{
-           if((Date.now()-this.comienzoInvulnerable)/1000 >= 2){
+           if((Date.now()-this.comienzoVida)/1000 >= 0.3){
              this.motoJugador.vidaCogida = false;
           }
         }
