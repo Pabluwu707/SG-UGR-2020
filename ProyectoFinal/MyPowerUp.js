@@ -3,12 +3,19 @@ class MyPowerUp extends THREE.Object3D {
   constructor() {
     super();
 
-    this.arma = new MyModel("../models/palmera.obj","../models/palmera.mtl");
+    this.palmera = new MyModel("../models/palmera.obj","../models/palmera.mtl");
+    this.bola = new MyModel("../models/bola.obj","../models/bola.mtl", 0xFF6C11, 0.2);
 
     //this.add(box);
 
     // Y añadirlo como hijo del Object3D (el this)
-    this.add (this.arma);
+    this.bola.scale.set(6,6,6);
+    this.palmera.scale.set(0.7,0.7,0.7);
+    this.palmera.position.x = -4;
+    this.palmera.position.y = 1.5;
+    this.palmera.position.z = 1;
+    this.add (this.palmera);
+    this.add (this.bola);
   }
 
 

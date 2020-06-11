@@ -103,6 +103,10 @@ class MyScene extends THREE.Scene {
     v2.style.display = "block";
     var v3 = document.getElementById("hp3");
     v3.style.display = "block";
+    var v4 = document.getElementById("hp4");
+    v2.style.display = "none";
+    var v5 = document.getElementById("hp5");
+    v3.style.display = "none";
     this.iniciarMenu();
 
   }
@@ -133,10 +137,6 @@ class MyScene extends THREE.Scene {
     // Incluimos en un array los objetos visualizados por el raycaster
     this.listaObstaculos = [];
     this.listaPowerUps = [];
-    this.powerup = new MyPowerUp();
-    this.powerup.position.z = 500;
-    this.nodoDesplazado.add (this.powerup);
-    this.listaPowerUps.push(this.powerup);
 
     for(var i = 0; i < numObstaculos;i++){
       // Número aleatorio
@@ -144,7 +144,13 @@ class MyScene extends THREE.Scene {
 
       if (numeroAleatorio < 9) { //Generar un único obstáculo
          // Crear nuevo obstáculo
-         this.obstaculo = new MyObstaculo();
+         var numeroPowerUp = Math.floor(Math.random() * 18 + 1);
+         if(numeroPowerUp < 17){
+           this.obstaculo = new MyObstaculo();
+         }
+         else{
+           this.obstaculo = new MyPowerUp();
+         }
 
          // Determinar posición Z
          var position = Math.floor(Math.random() * (200 - 100)) + 100*i + 500;
@@ -173,7 +179,13 @@ class MyScene extends THREE.Scene {
 
          // Añadir obstáculo
          this.nodoDesplazado.add (this.obstaculo);
-         this.listaObstaculos.push(this.obstaculo);
+         if(numeroPowerUp < 17){
+           this.listaObstaculos.push(this.obstaculo);
+         }
+         else{
+           this.listaPowerUps.push(this.obstaculo);
+         }
+
       } else { // Generar obstáculo doble (dos obstáculos en la misma altura)
          // Crear obstáculo doble
          console.log("Se va a generar un obstaculo doble");
@@ -514,6 +526,8 @@ class MyScene extends THREE.Scene {
              var vida1 = document.getElementById("hp1");
              var vida2 = document.getElementById("hp2");
              var vida3 = document.getElementById("hp3");
+             var vida4 = document.getElementById("hp4");
+             var vida5 = document.getElementById("hp5");
 
              this.comienzoInvulnerable = Date.now();
              this.motoJugador.hacerMotoInvisible();
@@ -527,6 +541,12 @@ class MyScene extends THREE.Scene {
              }
              else if(vida3.style.display != "none"){
                vida3.style.display = "none";
+             }
+             else if(vida4.style.display != "none"){
+               vida4.style.display = "none";
+             }
+             else if(vida5.style.display != "none"){
+               vida5.style.display = "none";
                var derrota = document.getElementById("derrota");
                derrota.style.display = "block";
                this.gameState = MyScene.Derrota;
@@ -541,20 +561,37 @@ class MyScene extends THREE.Scene {
             }
          }
 
-         if (interseccionPowerUp.length > 0) {
-           var vida1 = document.getElementById("hp1");
-           var vida2 = document.getElementById("hp2");
-           var vida3 = document.getElementById("hp3");
-           if(vida1.style.display == "none"){
-             vida1.style.display = "block";
-           }
-           else if(vida2.style.display == "none"){
-             vida2.style.display = "block";
-           }
-           else if(vida3.style.display == "none"){
-             vida3.style.display = "block";
+         if (!this.motoJugador.vidaCogida) {
+           if (interseccionPowerUp.length > 0) {
+             this.comienzoVida = Date.now();
+             this.motoJugador.vidaCogida = true;
+             var vida1 = document.getElementById("hp1");
+             var vida2 = document.getElementById("hp2");
+             var vida3 = document.getElementById("hp3");
+             var vida4 = document.getElementById("hp4");
+             var vida5 = document.getElementById("hp5");
+             if(vida5.style.display == "none"){
+               vida5.style.display = "block";
+             }
+             else if(vida4.style.display == "none"){
+               vida4.style.display = "block";
+             }
+             else if(vida3.style.display == "none"){
+               vida3.style.display = "block";
+             }
+             else if(vida2.style.display == "none"){
+               vida2.style.display = "block";
+             }
+             else if(vida1.style.display == "none"){
+               vida1.style.display = "block";
+             }
            }
          }
+         else{
+           if((Date.now()-this.comienzoInvulnerable)/1000 >= 1){
+             this.motoJugador.vidaCogida = false;
+          }
+        }
 
          if (interseccionMeta.length > 0) {
             console.log("META");
@@ -571,6 +608,7 @@ class MyScene extends THREE.Scene {
            break;
            case 2:
             this.nodoDesplazado.position.z -= 5;
+            this.motoJugador.velocidad = 1.1;
            break;
            case 3:
             this.nodoDesplazado.position.z -= 7;
