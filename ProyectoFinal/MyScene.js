@@ -574,6 +574,7 @@ class MyScene extends THREE.Scene {
            break;
            case 3:
             this.nodoDesplazado.position.z -= 7;
+            this.motoJugador.velocidad = 1.5;
            break;
          default:
 

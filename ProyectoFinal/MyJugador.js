@@ -39,6 +39,7 @@ class MyJugador extends THREE.Object3D {
     // Las geometrías se crean centradas en el origen.
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
+    this.velocidad = 1.0;
   }
 
   createGUI (gui,titleGui) {
@@ -133,7 +134,7 @@ class MyJugador extends THREE.Object3D {
 
         this.primeraEjecucion = true;
         if(this.position.x <= 43){
-           this.position.x += 0.6;
+           this.position.x += 0.6*this.velocidad;
            if (this.rotation.z > -0.3) {
              this.rotation.z -= 0.05;
            }
@@ -142,7 +143,7 @@ class MyJugador extends THREE.Object3D {
      else if(this.right){
         this.primeraEjecucion = true;
         if(this.position.x >= -43){
-          this.position.x -= 0.6;
+          this.position.x -= 0.6*this.velocidad;
           if (this.rotation.z < 0.3) {
             this.rotation.z += 0.05;
           }
