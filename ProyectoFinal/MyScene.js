@@ -86,6 +86,11 @@ class MyScene extends THREE.Scene {
 
   }
 
+  iniciarTutorial(){
+    this.gameState = MyScene.Tutorial;
+
+  }
+
   resetearJuego(){
     this.remove(this.motoJugador);
     this.remove(this.nodoDesplazado);
@@ -127,6 +132,11 @@ class MyScene extends THREE.Scene {
 
     // Incluimos en un array los objetos visualizados por el raycaster
     this.listaObstaculos = [];
+    this.listaPowerUps = [];
+    this.powerup = new MyPowerUp();
+    this.powerup.position.z = 500;
+    this.nodoDesplazado.add (this.powerup);
+    this.listaPowerUps.push(this.powerup);
 
     for(var i = 0; i < numObstaculos;i++){
       // Número aleatorio
@@ -469,6 +479,9 @@ class MyScene extends THREE.Scene {
       //this.cabeza.rotation.x += 0.01;
       this.cabeza.rotation.y += 0.01;
       switch(MyScene.nivelActual){
+        case(-1):
+          this.iniciarTutorial();
+          break;
         case(1):
           this.iniciarNivel(1);
           break;
@@ -490,6 +503,7 @@ class MyScene extends THREE.Scene {
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
          var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos, true );
+         var interseccionPowerUp = this.raycasterFrontal.intersectObjects( this.listaPowerUps, true );
 
          // Tambien ajustamos el raycaster para detectar la meta
          this.raycasterVictoria.ray.origin.copy(this.motoJugador.position);
@@ -525,6 +539,21 @@ class MyScene extends THREE.Scene {
               this.motoJugador.invulnerable = false;
               this.motoJugador.hacerMotoVisible();
             }
+         }
+
+         if (interseccionPowerUp.length > 0) {
+           var vida1 = document.getElementById("hp1");
+           var vida2 = document.getElementById("hp2");
+           var vida3 = document.getElementById("hp3");
+           if(vida1.style.display == "none"){
+             vida1.style.display = "block";
+           }
+           else if(vida2.style.display == "none"){
+             vida2.style.display = "block";
+           }
+           else if(vida3.style.display == "none"){
+             vida3.style.display = "block";
+           }
          }
 
          if (interseccionMeta.length > 0) {
@@ -569,6 +598,10 @@ class MyScene extends THREE.Scene {
 
       break;
 
+      case(MyScene.Tutorial):
+
+      break;
+
     }
   }
 }
@@ -578,6 +611,7 @@ MyScene.Menu = 0;
 MyScene.Nivel = 1;
 MyScene.Victoria = 2;
 MyScene.Derrota = 3;
+MyScene.Tutorial = 4;
 
 MyScene.nivelActual = 0;
 

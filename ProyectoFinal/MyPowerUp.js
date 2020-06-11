@@ -3,7 +3,7 @@ class MyPowerUp extends THREE.Object3D {
   constructor() {
     super();
 
-    this.arma = new MyModel("../models/gun.obj","../models/gun.mtl");
+    this.arma = new MyModel("../models/palmera.obj","../models/palmera.mtl");
 
     //this.add(box);
 
