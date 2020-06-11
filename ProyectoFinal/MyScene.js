@@ -588,7 +588,7 @@ class MyScene extends THREE.Scene {
            }
          }
          else{
-           if((Date.now()-this.comienzoInvulnerable)/1000 >= 1){
+           if((Date.now()-this.comienzoInvulnerable)/1000 >= 2){
              this.motoJugador.vidaCogida = false;
           }
         }
