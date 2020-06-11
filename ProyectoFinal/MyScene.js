@@ -98,15 +98,15 @@ class MyScene extends THREE.Scene {
     var vidas = document.getElementById("vidas");
     vidas.style.display = "none";
     var v1 = document.getElementById("hp1");
-    v1.style.display = "block";
+    v1.style.display = "none";
     var v2 = document.getElementById("hp2");
-    v2.style.display = "block";
+    v2.style.display = "none";
     var v3 = document.getElementById("hp3");
     v3.style.display = "block";
     var v4 = document.getElementById("hp4");
-    v2.style.display = "none";
+    v4.style.display = "block";
     var v5 = document.getElementById("hp5");
-    v3.style.display = "none";
+    v5.style.display = "block";
     this.iniciarMenu();
 
   }
