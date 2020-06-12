@@ -604,7 +604,6 @@ class MyScene extends THREE.Scene {
 
   onKeyUp (event) {
     var key = event.which || event.keyCode;
-    console.log(key);
     switch (key) {
       case 37 : // Cursor a la izquierda
         this.motoJugador.left = false;
@@ -721,8 +720,6 @@ class MyScene extends THREE.Scene {
              this.comienzoInvulnerable = Date.now();
              this.motoJugador.hacerMotoInvisible();
              this.motoJugador.invulnerable = true;
-             var screenShake = ScreenShake();
-             screenShake.shake(this.camera, new THREE.Vector3(0, 0, 0.25), 250);
 
              if(vida1.style.display != "none"){
                vida1.style.display = "none";
