@@ -470,7 +470,7 @@ class MyScene extends THREE.Scene {
 
     // El material se hará con una textura de madera
     var texture = new THREE.TextureLoader().load('../imgs/carretera.png');
-    var textureMeta = new THREE.TextureLoader().load('../imgs/carretera.png');
+    var textureMeta = new THREE.TextureLoader().load('../imgs/textura-ajedrezada.jpg');
 
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
     var materialMeta= new THREE.MeshPhongMaterial ({map: textureMeta});
@@ -485,7 +485,7 @@ class MyScene extends THREE.Scene {
     ground.position.z = -300;
     meta.rotation.y += Math.PI/2;
     meta.position.y = -0.1;
-    meta.position.z = 300*longitud-20;
+    meta.position.z = 300*longitud-55;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
@@ -506,17 +506,7 @@ class MyScene extends THREE.Scene {
       // Que no se nos olvide añadirlo a la escena, que en este caso es  this
       this.nodoDesplazado.add (ground);
     }
-    // Ya se puede construir el Mesh
-    var ground = new THREE.Mesh (geometryGround, materialGround);
 
-    // Todas las figuras se crean centradas en el origen.
-    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
-    ground.position.y = -0.1;
-
-
-    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-
-    this.nodoDesplazado.add (ground);
     this.add(this.nodoDesplazado);
 
   }
@@ -894,22 +884,13 @@ class MyScene extends THREE.Scene {
             }
          }
 
-         if (!this.motoJugador.vidaCogida) {
-           if (interseccionPowerUp.length > 0) {
-             this.comienzoVida = Date.now();
-             this.motoJugador.vidaCogida = true;
-             var vida4 = document.getElementById("hp4");
-             if(vida4.style.display == "none"){
-               vida4.style.display = "block";
-             }
-             this.sinErrores3 = false;
+         if (interseccionPowerUp.length > 0) {
+           var vida2 = document.getElementById("hp2");
+           if(vida2.style.display == "none"){
+             vida2.style.display = "block";
            }
+           this.sinErrores3 = false;
          }
-         else{
-           if((Date.now()-this.comienzoInvulnerable)/1000 >= 2){
-             this.motoJugador.vidaCogida = false;
-         }
-        }
 
          if (interseccionMeta.length > 0) {
             //console.log("META");
