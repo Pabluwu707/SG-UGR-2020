@@ -1,6 +1,6 @@
 Referencia de los objetos usados:
 
--Moto
+-Moto: Descargada de https://sketchfab.com/3d-models/kanedas-bike-e6caf7b73bc84fbc9f37e501a6935afc y separada en distintos archivos
 
 -Palmera: Descargada de https://www.thingiverse.com/thing:246331
 

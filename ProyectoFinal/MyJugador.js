@@ -47,6 +47,7 @@ class MyJugador extends THREE.Object3D {
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
     this.velocidad = 1.0;
+    this.tiempoAnterior = Date.now();
   }
 
   updateGeometry () {
@@ -98,28 +99,27 @@ class MyJugador extends THREE.Object3D {
    }
 
    update () {
-      // Modificación del modelo
-      if (this.invulnerable) {
 
-      }
+     var tiempoActual = Date.now();
+     var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
 
      // Opciones de movimiento
      if(this.left){
 
         this.primeraEjecucion = true;
         if(this.position.x <= 43){
-           this.position.x += 0.6*this.velocidad;
+           this.position.x += segundosTranscurridos*27*this.velocidad;
            if (this.rotation.z > -0.3) {
-             this.rotation.z -= 0.05;
+             this.rotation.z -= segundosTranscurridos*8;
            }
         }
      }
      else if(this.right){
         this.primeraEjecucion = true;
         if(this.position.x >= -43){
-          this.position.x -= 0.6*this.velocidad;
+          this.position.x -= segundosTranscurridos*27*this.velocidad;
           if (this.rotation.z < 0.3) {
-            this.rotation.z += 0.05;
+            this.rotation.z += segundosTranscurridos*8;
           }
         }
      }
@@ -127,6 +127,7 @@ class MyJugador extends THREE.Object3D {
 
        this.rotation.z = 0;
      }
+    this.tiempoAnterior = tiempoActual;
 
   }
 }

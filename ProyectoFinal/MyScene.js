@@ -37,6 +37,7 @@ class MyScene extends THREE.Scene {
     pixelPass.uniforms[ "pixelSize" ].value = 3;
     this.composer.addPass(pixelPass);
     pixelPass.renderToScreen = true;
+    this.tiempoAnterior = Date.now();
 
   }
 
@@ -648,6 +649,9 @@ class MyScene extends THREE.Scene {
 		this.renderer.render (this, this.getCamera());
 	 }
 
+   var tiempoActual = Date.now();
+   var segundosTranscurridos = (tiempoActual - this.tiempoAnterior) / 1000;
+
    // Dependiendo del estado actual la funcionalidad del update cambia
     switch (this.gameState) {
       case(MyScene.Menu):
@@ -813,14 +817,14 @@ class MyScene extends THREE.Scene {
          // Dependiendo del nivel la velocidad será mayor
          switch (MyScene.nivelActual) {
            case 1:
-            this.nodoDesplazado.position.z -= 2.5;
+            this.nodoDesplazado.position.z -= segundosTranscurridos*100;
            break;
            case 2:
-            this.nodoDesplazado.position.z -= 5;
+            this.nodoDesplazado.position.z -= segundosTranscurridos*200;
             this.motoJugador.velocidad = 1.1;
            break;
            case 3:
-            this.nodoDesplazado.position.z -= 7;
+            this.nodoDesplazado.position.z -= segundosTranscurridos*340;
             this.motoJugador.velocidad = 1.5;
            break;
          default:
@@ -831,13 +835,13 @@ class MyScene extends THREE.Scene {
       // En el estado victoria se consigue el efecto de que la moto avanza hasta el infinito
       case(MyScene.Victoria):
          this.motoJugador.update();
-         if (this.velocidadMoto < 5) {
-            this.velocidadMoto += 0.25;
+         if (this.velocidadMoto < 500) {
+            this.velocidadMoto += 10;
          }
          if (this.escalaMoto > 0.3) {
             this.escalaMoto = this.escalaMoto * 0.995;
          }
-         this.motoJugador.position.z += this.velocidadMoto;
+         this.motoJugador.position.z += segundosTranscurridos*this.velocidadMoto;
          this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
       break;
 
@@ -894,7 +898,7 @@ class MyScene extends THREE.Scene {
             this.tiempoFinNivel = Date.now();
          }
 
-         this.nodoDesplazado.position.z -= 2.5;
+         this.nodoDesplazado.position.z -= segundosTranscurridos*100;
 
          if (this.nodoDesplazado.position.z < -1315 && !this.sinErrores1) {
             this.nodoDesplazado.position.z = 0;
@@ -921,6 +925,8 @@ class MyScene extends THREE.Scene {
       break;
 
     }
+
+    this.tiempoAnterior = tiempoActual;
   }
 }
 
