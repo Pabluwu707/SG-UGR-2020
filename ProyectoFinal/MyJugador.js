@@ -3,8 +3,7 @@ class MyJugador extends THREE.Object3D {
   constructor() {
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la caja
-    // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
+    // Cargamos los modelos
 
     this.cristal = new MyModel("../models/cristal.obj","../models/cristal.mtl", 0xF9C80E, 0.5);
     this.carroceria = new MyModel("../models/carroceria.obj","../models/carroceria.mtl", 0xFF3864);
@@ -40,37 +39,6 @@ class MyJugador extends THREE.Object3D {
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
     this.velocidad = 1.0;
-  }
-
-  createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
-    this.guiControls = new function () {
-      this.rotX = 0.0;
-      this.rotY = 0.0;
-      this.rotZ = 0.0;
-
-      // Un botón para dejarlo todo en su posición inicial
-      // Cuando se pulse se ejecutará esta función.
-      this.reset = function () {
-         this.rotX = 0.0;
-         this.rotY = 0.0;
-         this.rotZ = 0.0;
-      }
-    }
-
-    // Se crea una sección para los controles de la caja
-    var objeto = this;
-    var folder = gui.addFolder (titleGui);
-    // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
-    // El método   listen()   permite que si se cambia el valor de la variable en código, el deslizador de la interfaz se actualice
-
-
-    folder.add (this.guiControls, 'rotX', 0.0, Math.PI/2, 0.1).name ('Rotación X : ').listen();
-    folder.add (this.guiControls, 'rotY', 0.0, Math.PI/2, 0.1).name ('Rotación Y : ').listen();
-    folder.add (this.guiControls, 'rotZ', 0.0, Math.PI/2, 0.1).name ('Rotación Z : ').listen();
-
-    folder.add (this.guiControls, 'reset').name ('[ Reset ]');
   }
 
   updateGeometry () {
@@ -127,8 +95,6 @@ class MyJugador extends THREE.Object3D {
 
       }
 
-     //console.log(this.rotation.z);
-
      // Opciones de movimiento
      if(this.left){
 
@@ -150,22 +116,9 @@ class MyJugador extends THREE.Object3D {
         }
      }
      else {
-        /*if (this.primeraEjecucion) {
-           this.rotacionInicio = this.rotation.z;
-           this.primeraEjecucion = false;
-        }
-        TWEEN.update();*/
-        // Devolver rotación a 0, está bugeado
-        // Intentaré hacerlo con Tween para evitar errores
-        /*if (this.rotation.z > 0) {
-          this.rotation.z -= 0.05;
-        } else if (this.rotation.z < 0) {
-          this.rotation.z += 0.05;
-       }*/
+
        this.rotation.z = 0;
      }
 
-
-    //this.rotation.set (this.guiControls.rotX,this.guiControls.rotY,this.guiControls.rotZ);
   }
 }

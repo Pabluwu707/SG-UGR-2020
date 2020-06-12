@@ -9,6 +9,7 @@ class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
 
+    // Ponemos el fondo negro
     this.background = new THREE.Color( 0x050505 );
 
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
@@ -26,6 +27,7 @@ class MyScene extends THREE.Scene {
     // Tendremos una cámara con un control de movimiento con el ratón
     this.createCamera ();
 
+    // Iniciamos creando el menú del juego
     this.iniciarMenu();
 
     // Composer para efectos postprocessing
@@ -36,64 +38,65 @@ class MyScene extends THREE.Scene {
     composer.addPass(renderPass);
     renderPass.renderToScreen = true;
     */
-
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
   }
 
   iniciarNivel(dificultad){
+
+    // Eliminamos el menú
     this.limpiarMenu();
+
+    // Detenemos la musica
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
       this.sound.stop();
     });
+
+    // Pasamos al estado "Nivel"
     this.gameState = MyScene.Nivel;
+
+    // Dependiendo de la dificultad cambia el número de obstaculos y la longitud
     switch(dificultad){
       case(1):
          var longitudNivel = 7;
          var obstaculosAGenerar = 13;
       break;
       case(2):
-         var longitudNivel = 14;
-         var obstaculosAGenerar = 36;
+         var longitudNivel = 28;
+         var obstaculosAGenerar = 76;
       break;
       case(3):
-         var longitudNivel = 28;
-         var obstaculosAGenerar = 76
+         var longitudNivel = 56;
+         var obstaculosAGenerar = 156;
       break;
     }
-    // Un suelo
+
+    //Creamos un nodo de desplazamiento, a él se añadirán los objetos del suelo y se irá moviendo hacia atrás simulando que la moto avanza
     this.nodoDesplazado = new THREE.Object3D();
     this.listaMeta = [];
-
-    //var num_obstaculos = Math.floor(Math.random() * 10);
-
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 10 );
 
     // Inicialización del raycaster usado para detectar colisiones frontales
     this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
-    var menu = document.getElementById("menu");
-    menu.style.display = "none";
-    var vidas = document.getElementById("vidas");
-    vidas.style.display = "block";
+
+    // Generamos los elementos de la escena
     this.generateObstaculos(obstaculosAGenerar);
     this.createGround (longitudNivel);
     this.generateJugador();
     this.generateMontania(longitudNivel);
-    this.createBackGround ();
-    console.log("iniciado");
-    this.tiempoInicioNivel = Date.now();
   }
 
   iniciarMenu(){
-      this.nodoDesplazado = new THREE.Object3D();
-      this.listaMeta = [];
-      this.createGround (2);
-      this.createBackGround ();
+
+    // Creamos un suelo y fondo
+    this.nodoDesplazado = new THREE.Object3D();
+    this.listaMeta = [];
+    this.createGround (2);
+    this.createBackGround ();
+
+    // Iniciamos la música
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( '../music/80s-remix-backstreet-boys-i-want-it-that-way.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
@@ -101,14 +104,24 @@ class MyScene extends THREE.Scene {
       this.sound.setVolume( 0.5 );
       this.sound.play();
     });
+
+    // Pasamos el estado de juego a "Menú"
     this.gameState = MyScene.Menu;
+
+    //Pasamos el nivel a 0
     MyScene.nivelActual = 0;
+
+    // Mostramos el menú
     var menu = document.getElementById("menu");
     menu.style.display = "block";
   }
 
   iniciarTutorial(){
-     this.limpiarMenu();
+
+    // Eliminamos los elementos del menú
+    this.limpiarMenu();
+
+    // Iniciamos la música
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
@@ -116,25 +129,19 @@ class MyScene extends THREE.Scene {
     });
     this.gameState = MyScene.Tutorial;
 
-    // Un suelo
+    //Creamos un nodo de desplazamiento, a él se añadirán los objetos del suelo y se irá moviendo hacia atrás simulando que la moto avanza
     this.nodoDesplazado = new THREE.Object3D();
     this.listaMeta = [];
-
-    //var num_obstaculos = Math.floor(Math.random() * 10);
 
     // Inicialización de los raycasters usados para detectar colisiones frontales
     this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 3 );
     this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
 
-    var menu = document.getElementById("menu");
-    menu.style.display = "none";
-    var vidas = document.getElementById("vidas");
-    vidas.style.display = "block";
-
+    // Creamos la lista de obstaculos y power ups
     this.listaObstaculos = [];
     this.listaPowerUps = [];
 
-    // GENERAR LOS OBSTACULOS NO ALEATORIZADOS (Perdon por el tochaco de codigo)
+    // GENERAR LOS OBSTACULOS NO ALEATORIZADOS
     // PASO 1
     this.obstaculo = new MyObstaculo();
     this.obstaculo.position.x = 11;
@@ -255,13 +262,11 @@ class MyScene extends THREE.Scene {
     this.createGround(14);
     this.generateJugador();
     this.generateMontania(14);
-    this.createBackGround ();
-    console.log("iniciado");
     this.tiempoInicioNivel = Date.now();
 
-   this.sinErrores1 = true;
-   this.sinErrores2 = true;
-   this.sinErrores3 = true;
+    this.sinErrores1 = true;
+    this.sinErrores2 = true;
+    this.sinErrores3 = true;
 
 
    var imagentuto = document.getElementById("imagentutorial");
@@ -272,14 +277,20 @@ class MyScene extends THREE.Scene {
   }
 
   limpiarMenu(){
+
+    // Eliminamos los elementos del menú
     this.remove(this.nodoDesplazado);
-    this.remove(this.backGround);
+    var menu = document.getElementById("menu");
+    menu.style.display = "none";
+    var vidas = document.getElementById("vidas");
+    vidas.style.display = "block";
   }
 
   resetearJuego(){
+
+    // Eliminamos los elementos de los niveles y reseteamos las vidas
     this.remove(this.motoJugador);
     this.remove(this.nodoDesplazado);
-    this.remove(this.backGround);
     var vidas = document.getElementById("vidas");
     vidas.style.display = "none";
     var v1 = document.getElementById("hp1");
@@ -294,6 +305,8 @@ class MyScene extends THREE.Scene {
     v5.style.display = "block";
     this.iniciarMenu();
     var audioLoader = new THREE.AudioLoader();
+
+    // Resetamos la música
     audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
       this.sound.stop();
@@ -312,6 +325,8 @@ class MyScene extends THREE.Scene {
 
   generateJugador(){
 
+
+    // Generamos la moto
     this.motoJugador = new MyJugador();
     this.motoJugador.position.x = -10;
     this.motoJugador.position.y = 3.8;
@@ -349,7 +364,6 @@ class MyScene extends THREE.Scene {
 
          // Determinar posicion X
          var numeroCarril = Math.floor(Math.random() * 4 + 1);
-         console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
          switch (numeroCarril) {
             case 1 :
              this.obstaculo.position.x = 33;
@@ -379,7 +393,6 @@ class MyScene extends THREE.Scene {
 
       } else { // Generar obstáculo doble (dos obstáculos en la misma altura)
          // Crear obstáculo doble
-         //console.log("Se va a generar un obstaculo doble");
          this.obstaculo1 = new MyObstaculo();
          this.obstaculo2 = new MyObstaculo();
 
@@ -390,7 +403,6 @@ class MyScene extends THREE.Scene {
 
          // Determinar posicion X
          var numeroCarril = Math.floor(Math.random() * 6 + 1);
-         //console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
          switch (numeroCarril) {
             case 1 :
              this.obstaculo1.position.x = 33;
@@ -450,25 +462,17 @@ class MyScene extends THREE.Scene {
     this.audioLoader = new THREE.AudioLoader();
     this.add (this.camera);
 
-    // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
-    this.cameraControl = new THREE.TrackballControls (this.camera, this.renderer.domElement);
-    // Se configuran las velocidades de los movimientos
-    this.cameraControl.rotateSpeed = 5;
-    this.cameraControl.zoomSpeed = -2;
-    this.cameraControl.panSpeed = 0.5;
-    // Debe orbitar con respecto al punto de mira de la cámara
-    this.cameraControl.target = look;
 
   }
 
   createGround (longitud) {
     // El suelo es un Mesh, necesita una geometría y un material.
 
-    // La geometría es una motoJugador con muy poca altura
+    // La geometría es un rectángulo
     var geometryGround = new THREE.BoxGeometry (500,1,300);
     var geometryMeta = new THREE.BoxGeometry (200,1,200);
 
-    // El material se hará con una textura de madera
+    // Usaremos texturas de carretera y ajedrez para la carretera y la meta
     var texture = new THREE.TextureLoader().load('../imgs/carretera.png');
     var textureMeta = new THREE.TextureLoader().load('../imgs/textura-ajedrezada.jpg');
 
@@ -479,26 +483,23 @@ class MyScene extends THREE.Scene {
     var ground = new THREE.Mesh (geometryGround, materialGround);
     var meta = new THREE.Mesh (geometryMeta, materialMeta);
 
-    // Todas las figuras se crean centradas en el origen.
-    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
+    // Colocamos el primer segmento de la carretera y la meta
     ground.position.y = -0.1;
     ground.position.z = -300;
     meta.rotation.y += Math.PI/2;
     meta.position.y = -0.1;
-    meta.position.z = 300*longitud-55;
+    meta.position.z = 300*longitud-50;
 
 
-    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-
+    // Que no se nos olvide añadirlo a la escena
     this.nodoDesplazado.add (ground);
     this.nodoDesplazado.add (meta);
     this.listaMeta.push(meta);
 
+    // Creamos los segmentos de carretera
     for(var i = 0; i < longitud; i++){
       var ground = new THREE.Mesh (geometryGround, materialGround);
 
-      // Todas las figuras se crean centradas en el origen.
-      // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
       ground.position.y = -0.1;
       ground.position.z = 300*i;
 
@@ -512,24 +513,21 @@ class MyScene extends THREE.Scene {
   }
 
   createBackGround () {
-    // El suelo es un Mesh, necesita una geometría y un material.
 
-    // La geometría es una motoJugador con muy poca altura
+    // Creamos un panel de fondo
     var geometryBackGround = new THREE.BoxGeometry (1412,450,1);
 
-    // El material se hará con una textura de madera
+    // La textura es una imagen Synthwave
     var texture = new THREE.TextureLoader().load('../imgs/fondo.jpg');
     var materialBackGround = new THREE.MeshPhongMaterial ({map: texture});
 
     // Ya se puede construir el Mesh
     this.backGround = new THREE.Mesh (geometryBackGround, materialBackGround);
 
-    // Todas las figuras se crean centradas en el origen.
-    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
     this.backGround.position.z = 400;
     this.backGround.position.y = 140;
 
-    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
+    // Que no se nos olvide añadirlo a la escena
     this.add (this.backGround);
   }
 
@@ -614,6 +612,7 @@ class MyScene extends THREE.Scene {
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
 
+  // Eventos para mover la moto a izquierda y derecha al pulsar los botones
   onKeyDown (event) {
     var key = event.which || event.keyCode;
     switch (key) {
@@ -626,6 +625,7 @@ class MyScene extends THREE.Scene {
     }
   }
 
+  // Cuando soltamos las teclas deja de moverse, además el espacio se usa para volver al menú al terminar
   onKeyUp (event) {
     var key = event.which || event.keyCode;
     switch (key) {
@@ -661,21 +661,17 @@ class MyScene extends THREE.Scene {
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
     this.spotLight.intensity = this.guiControls.lightIntensity;
 
-
-    // Se actualiza la posición de la cámara según su controlador
-    this.cameraControl.update();
-
-    //this.camera.position.z += 0.5;
-
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
 
-
+    // Dependiendo del estado de juego el se harán unas cosas u otras
     switch (this.gameState) {
       case(MyScene.Menu):
       switch(MyScene.nivelActual){
+        // Se ha seleccionado el tutorial
         case(-1):
+          // Iniciamos la canción
           var audioLoader = new THREE.AudioLoader();
           audioLoader.load( '../music/sweden-c418-synthwave80s.mp3', ( buffer ) => {
             this.sound.setBuffer( buffer );
@@ -683,9 +679,12 @@ class MyScene extends THREE.Scene {
             this.sound.setVolume( 0.5 );
             this.sound.play();
           });
+          // Iniciamos el tutorial
           this.iniciarTutorial();
           break;
+        // Se ha seleccionado el nivel 1
         case(1):
+          // Iniciamos la canción
           var audioLoader = new THREE.AudioLoader();
           audioLoader.load( '../music/windows96-dragon-ball-z-theme-synth-version.mp3', ( buffer ) => {
             this.sound.setBuffer( buffer );
@@ -693,9 +692,12 @@ class MyScene extends THREE.Scene {
             this.sound.setVolume( 0.5 );
             this.sound.play();
           });
+          // Iniciamos el nivel 1
           this.iniciarNivel(1);
           break;
+        // Se ha seleccionado el nivel 2
         case(2):
+          // Iniciamos la canción
           var audioLoader = new THREE.AudioLoader();
           audioLoader.load( '../music/gorillaz-stylo-official-video.mp3', ( buffer ) => {
             this.sound.setBuffer( buffer );
@@ -703,9 +705,12 @@ class MyScene extends THREE.Scene {
             this.sound.setVolume( 0.5 );
             this.sound.play();
           });
+          // Iniciamos el nivel 2
           this.iniciarNivel(2);
           break;
+        // Se ha seleccionado el nivel 3
         case(3):
+          // Iniciamos la canción
           var audioLoader = new THREE.AudioLoader();
           audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
             this.sound.setBuffer( buffer );
@@ -713,16 +718,15 @@ class MyScene extends THREE.Scene {
             this.sound.setVolume( 0.5 );
             this.sound.play();
           });
+          // Iniciamos el nivel 3
           this.iniciarNivel(3);
           break;
       }
       break;
 
       case(MyScene.Nivel):
-         // Se actualiza el resto del modelo
-         //this.octree.update();
+         // Se actualiza el modelo
          this.motoJugador.update();
-         //this.obstaculo.update();
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
@@ -733,6 +737,7 @@ class MyScene extends THREE.Scene {
          this.raycasterVictoria.ray.origin.copy(this.motoJugador.position);
          var interseccionMeta = this.raycasterVictoria.intersectObjects( this.listaMeta, true );
 
+         // Si la moto no esta en modo invulnerable perderá una vida al chocar
          if (!this.motoJugador.invulnerable) {
            if (intersecciones.length > 0) {
              var vida1 = document.getElementById("hp1");
@@ -766,13 +771,14 @@ class MyScene extends THREE.Scene {
            }
          }
          else if (this.motoJugador.invulnerable) {
-            //console.log((Date.now()-this.comienzoInvulnerable)/1000);
+            // Analizamos si el juego está en invulnerable
             if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
               this.motoJugador.invulnerable = false;
               this.motoJugador.hacerMotoVisible();
             }
          }
 
+         // Cogemos la vida
          if (!this.motoJugador.vidaCogida) {
            if (interseccionPowerUp.length > 0) {
              this.comienzoVida = Date.now();
@@ -800,20 +806,21 @@ class MyScene extends THREE.Scene {
            }
          }
          else{
+           // Nos aseguramos de que no se puedan coger las vidas de forma muy seguida
            if((Date.now()-this.comienzoVida)/1000 >= 0.3){
              this.motoJugador.vidaCogida = false;
           }
         }
 
+         // Detectamos la meta y cambiamos el estado
          if (interseccionMeta.length > 0) {
-            console.log("META");
             var vida1 = document.getElementById("victoria");
             victoria.style.display = "block";
             this.gameState = MyScene.Victoria;
             this.tiempoFinNivel = Date.now();
          }
 
-
+         // Dependiendo del nivel la velocidad es una u otra
          switch (MyScene.nivelActual) {
            case 1:
             this.nodoDesplazado.position.z -= 2.5;
@@ -831,6 +838,7 @@ class MyScene extends THREE.Scene {
          }
       break;
 
+      // Creamos el efecto de que la moto se aleja al alcanzar la meta
       case(MyScene.Victoria):
          this.motoJugador.update();
          this.obstaculo.update();
@@ -839,7 +847,6 @@ class MyScene extends THREE.Scene {
          }
          if (this.escalaMoto > 0.3) {
             this.escalaMoto = this.escalaMoto * 0.995;
-            //console.log(this.escalaMoto)
          }
          this.motoJugador.position.z += this.velocidadMoto;
          this.motoJugador.scale.set(this.escalaMoto,this.escalaMoto,this.escalaMoto);
@@ -851,9 +858,7 @@ class MyScene extends THREE.Scene {
 
       case(MyScene.Tutorial):
          // Se actualiza el resto del modelo
-         //this.octree.update();
          this.motoJugador.update();
-         //this.obstaculo.update();
 
          // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
          this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
@@ -877,7 +882,6 @@ class MyScene extends THREE.Scene {
            }
          }
          else if (this.motoJugador.invulnerable) {
-            //console.log((Date.now()-this.comienzoInvulnerable)/1000);
             if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
               this.motoJugador.invulnerable = false;
               this.motoJugador.hacerMotoVisible();
@@ -893,7 +897,6 @@ class MyScene extends THREE.Scene {
          }
 
          if (interseccionMeta.length > 0) {
-            //console.log("META");
             var textotuto = document.getElementById("textotutorial");
             textotuto.style.display = "none";
             var vida1 = document.getElementById("victoria");
@@ -932,7 +935,7 @@ class MyScene extends THREE.Scene {
   }
 }
 
-// Enum pero de pega porque Javascript no me deja
+// Enum pero de pega porque Javascript no lo permite
 MyScene.Menu = 0;
 MyScene.Nivel = 1;
 MyScene.Victoria = 2;
@@ -941,6 +944,7 @@ MyScene.Tutorial = 4;
 
 MyScene.nivelActual = 0;
 
+// Función de selección de nivel
 function setNivel(nivel){
  MyScene.nivelActual = nivel;
 }
