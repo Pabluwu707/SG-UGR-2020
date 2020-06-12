@@ -14,9 +14,6 @@ class MyScene extends THREE.Scene {
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
 
-    // Se añade a la gui los controles para manipular los elementos de esta clase
-    this.gui = this.createGUI ();
-
     // Construimos los distinos elementos que tendremos en la escena
 
     // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
@@ -29,13 +26,19 @@ class MyScene extends THREE.Scene {
     this.iniciarMenu();
 
     // Composer para efectos postprocessing
-    /*
+
     this.composer = new THREE.EffectComposer(this.renderer);
 
     this.renderPass = new THREE.RenderPass(this, this.camera)
-    composer.addPass(renderPass);
-    renderPass.renderToScreen = true;
-    */
+    this.composer.addPass(this.renderPass);
+
+    // SHader de los pixelitos
+    this.pixelPass = new THREE.ShaderPass( THREE.PixelShader );
+	 this.pixelPass.uniforms[ "resolution" ].value = new THREE.Vector2( window.innerWidth, window.innerHeight );
+	 this.pixelPass.uniforms[ "resolution" ].value.multiplyScalar( window.devicePixelRatio );
+    this.pixelPass.uniforms[ "pixelSize" ].value = 3;
+    this.composer.addPass(this.pixelPass);
+    this.pixelPass.renderToScreen = true;
 
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
@@ -449,16 +452,6 @@ class MyScene extends THREE.Scene {
 
     this.audioLoader = new THREE.AudioLoader();
     this.add (this.camera);
-
-    // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
-    this.cameraControl = new THREE.TrackballControls (this.camera, this.renderer.domElement);
-    // Se configuran las velocidades de los movimientos
-    this.cameraControl.rotateSpeed = 5;
-    this.cameraControl.zoomSpeed = -2;
-    this.cameraControl.panSpeed = 0.5;
-    // Debe orbitar con respecto al punto de mira de la cámara
-    this.cameraControl.target = look;
-
   }
 
   createGround (longitud) {
@@ -485,7 +478,7 @@ class MyScene extends THREE.Scene {
     ground.position.z = -300;
     meta.rotation.y += Math.PI/2;
     meta.position.y = -0.1;
-    meta.position.z = 300*longitud-55;
+    meta.position.z = 300*longitud-53;
 
 
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
@@ -533,34 +526,12 @@ class MyScene extends THREE.Scene {
     this.add (this.backGround);
   }
 
-  createGUI () {
-    // Se crea la interfaz gráfica de usuario
-    var gui = new dat.GUI();
-
-    // La escena le va a añadir sus propios controles.
-    // Se definen mediante una   new function()
-    // En este caso la intensidad de la luz y si se muestran o no los ejes
-    this.guiControls = new function() {
-      // En el contexto de una función   this   alude a la función
-      this.lightIntensity = 0;
-    }
-
-    // Se crea una sección para los controles de esta clase
-    var folder = gui.addFolder ('Luz y Ejes');
-
-    // Se le añade un control para la intensidad de la luz
-    folder.add (this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
-
-
-    return gui;
-  }
-
   createLights () {
     // Se crea una luz ambiental, evita que se vean complentamente negras las zonas donde no incide de manera directa una fuente de luz
     // La luz ambiental solo tiene un color y una intensidad
     // Se declara como   var   y va a ser una variable local a este método
     //    se hace así puesto que no va a ser accedida desde otros métodos
-    var ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
+    var ambientLight = new THREE.AmbientLight(0xccddee, 0.5);
     // La añadimos a la escena
     this.add (ambientLight);
 
@@ -568,9 +539,7 @@ class MyScene extends THREE.Scene {
     // La luz focal, además tiene una posición, y un punto de mira
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-    this.spotLight = new THREE.SpotLight( 0xffffff, this.guiControls.lightIntensity );
-    this.spotLight.position.set( 60, 60, 40 );
-    this.add (this.spotLight);
+
   }
 
   createRenderer (myCanvas) {
@@ -659,17 +628,12 @@ class MyScene extends THREE.Scene {
 
     // Se actualizan los elementos de la escena para cada frame
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
-    this.spotLight.intensity = this.guiControls.lightIntensity;
-
-
-    // Se actualiza la posición de la cámara según su controlador
-    this.cameraControl.update();
-
-    //this.camera.position.z += 0.5;
+    //this.spotLight.intensity = this.guiControls.lightIntensity;
+    //this.spotLights.intensity = this.guiControls.lightIntensity;
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    this.renderer.render (this, this.getCamera());
-
+    //this.renderer.render (this, this.getCamera());
+    this.composer.render();
 
 
     switch (this.gameState) {
@@ -744,6 +708,8 @@ class MyScene extends THREE.Scene {
              this.comienzoInvulnerable = Date.now();
              this.motoJugador.hacerMotoInvisible();
              this.motoJugador.invulnerable = true;
+             var screenShake = ScreenShake();
+             screenShake.shake(this.camera, new THREE.Vector3(0, 0, 0.25), 250);
 
              if(vida1.style.display != "none"){
                vida1.style.display = "none";
@@ -943,6 +909,95 @@ MyScene.nivelActual = 0;
 
 function setNivel(nivel){
  MyScene.nivelActual = nivel;
+}
+
+////////////////////////
+///  SCREEN SHAKE
+////////////////////////
+
+function ScreenShake() {
+
+ return {
+
+    // When a function outside ScreenShake handle the camera, it should
+    // always check that ScreenShake.enabled is false before.
+    enabled: false,
+
+    _timestampStart: undefined,
+
+    _timestampEnd: undefined,
+
+    _startPoint: undefined,
+
+    _endPoint: undefined,
+
+
+    // update(camera) must be called in the loop function of the renderer,
+    // it will repositioned the camera according to the requested shaking.
+    update: function update(camera) {
+      if ( this.enabled == true ) {
+        const now = Date.now();
+        if ( this._timestampEnd > now ) {
+          let interval = (Date.now() - this._timestampStart) /
+            (this._timestampEnd - this._timestampStart) ;
+          this.computePosition( camera, interval );
+        } else {
+          camera.position.copy(this._startPoint);
+          this.enabled = false;
+        };
+      };
+    },
+
+
+    // This initialize the values of the shaking.
+    // vecToAdd param is the offset of the camera position at the climax of its wave.
+    shake: function shake(camera, vecToAdd, milliseconds) {
+      this.enabled = true ;
+      this._timestampStart = Date.now();
+      this._timestampEnd = this._timestampStart + milliseconds;
+      this._startPoint = new THREE.Vector3().copy(camera.position);
+      this._endPoint = new THREE.Vector3().addVectors( camera.position, vecToAdd );
+    },
+
+
+    computePosition: function computePosition(camera, interval) {
+
+      // This creates the wavy movement of the camera along the interval.
+      // The first bloc call this.getQuadra() with a positive indice between
+      // 0 and 1, then the second call it again with a negative indice between
+      // 0 and -1, etc. Variable position will get the sign of the indice, and
+      // get wavy.
+      if (interval < 0.4) {
+        var position = this.getQuadra( interval / 0.4 );
+      } else if (interval < 0.7) {
+        var position = this.getQuadra( (interval-0.4) / 0.3 ) * -0.6;
+      } else if (interval < 0.9) {
+        var position = this.getQuadra( (interval-0.7) / 0.2 ) * 0.3;
+      } else {
+        var position = this.getQuadra( (interval-0.9) / 0.1 ) * -0.1;
+      }
+
+      // Here the camera is positioned according to the wavy 'position' variable.
+      camera.position.lerpVectors( this._startPoint, this._endPoint, position );
+    },
+
+    // This is a quadratic function that return 0 at first, then return 0.5 when t=0.5,
+    // then return 0 when t=1 ;
+    getQuadra: function getQuadra(t) {
+      return 9.436896e-16 + (4*t) - (4*(t*t)) ;
+    }
+
+ };
+
+};
+
+
+//////////////////////
+////  EVENT
+//////////////////////
+
+function shake() {
+   screenShake.shake( camera, new THREE.Vector3(0.5, -1, 1.5), 250 );
 }
 
 

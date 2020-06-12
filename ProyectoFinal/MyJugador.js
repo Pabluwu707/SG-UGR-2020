@@ -17,6 +17,12 @@ class MyJugador extends THREE.Object3D {
     this.add (this.partesNegras);
     this.add (this.carroceria);
 
+    this.spotLight = new THREE.SpotLight( 0xffffff, 0.5, 150 );
+    this.spotLight.position.set( 0, 2, 0 );
+    this.spotLight.target.position.set( 0, 0, 2 );
+    this.spotLight.angle = Math.PI/6;
+    this.add (this.spotLight);
+
     this.invulnerabilidad = false;
 
     this.scale.set(1.5,1.5,1.5);
