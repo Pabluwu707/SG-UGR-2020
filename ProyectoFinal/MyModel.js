@@ -1,6 +1,6 @@
 
 class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, colorMaterial = 0x000000, opacity = 1) {
+  constructor(urlObj, urlMat, colorMaterial = 0x000000, opacity = 1, colorLinea = 0xFFFFFF) {
     super();
 
     var clase = this;
@@ -29,7 +29,7 @@ class MyModel extends THREE.Object3D {
 
                // Líneas de distinto color
                var edges = new THREE.EdgesGeometry( child.geometry );
-               var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+               var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: colorLinea } ) );
                line.material.opacity = 0.20;
                line.material.transparent = true;
                clase.add( line );
