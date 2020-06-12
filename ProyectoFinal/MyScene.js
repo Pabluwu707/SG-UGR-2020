@@ -312,7 +312,7 @@ class MyScene extends THREE.Scene {
 
     // Detenemos la musica
     var audioLoader = new THREE.AudioLoader();
-    audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
+    audioLoader.load( '../music/prueba.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
       this.sound.stop();
     });
@@ -338,7 +338,7 @@ class MyScene extends THREE.Scene {
 
     this.add (this.motoJugador);
 
-    this.velocidadMoto = 2.5;
+    this.velocidadMoto = 340;
     this.escalaMoto = 1;
   }
 

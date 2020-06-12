@@ -110,7 +110,7 @@ class MyJugador extends THREE.Object3D {
         if(this.position.x <= 43){
            this.position.x += segundosTranscurridos*27*this.velocidad;
            if (this.rotation.z > -0.3) {
-             this.rotation.z -= segundosTranscurridos*8;
+             this.rotation.z -= segundosTranscurridos*4;
            }
         }
      }
@@ -119,7 +119,7 @@ class MyJugador extends THREE.Object3D {
         if(this.position.x >= -43){
           this.position.x -= segundosTranscurridos*27*this.velocidad;
           if (this.rotation.z < 0.3) {
-            this.rotation.z += segundosTranscurridos*8;
+            this.rotation.z += segundosTranscurridos*4;
           }
         }
      }
