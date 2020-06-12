@@ -28,12 +28,22 @@ class MyScene extends THREE.Scene {
 
     this.iniciarMenu();
 
+    // Composer para efectos postprocessing
+    /*
+    this.composer = new THREE.EffectComposer(this.renderer);
+
+    this.renderPass = new THREE.RenderPass(this, this.camera)
+    composer.addPass(renderPass);
+    renderPass.renderToScreen = true;
+    */
+
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
   }
 
   iniciarNivel(dificultad){
+    this.limpiarMenu();
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
@@ -80,7 +90,10 @@ class MyScene extends THREE.Scene {
   }
 
   iniciarMenu(){
-
+      this.nodoDesplazado = new THREE.Object3D();
+      this.listaMeta = [];
+      this.createGround (2);
+      this.createBackGround ();
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( '../music/80s-remix-backstreet-boys-i-want-it-that-way.mp3', ( buffer ) => {
       this.sound.setBuffer( buffer );
@@ -92,12 +105,177 @@ class MyScene extends THREE.Scene {
     MyScene.nivelActual = 0;
     var menu = document.getElementById("menu");
     menu.style.display = "block";
-
   }
 
   iniciarTutorial(){
+     this.limpiarMenu();
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '../music/digital-drive-va-11-hall-a.mp3', ( buffer ) => {
+      this.sound.setBuffer( buffer );
+      this.sound.stop();
+    });
     this.gameState = MyScene.Tutorial;
 
+    // Un suelo
+    this.nodoDesplazado = new THREE.Object3D();
+    this.listaMeta = [];
+
+    //var num_obstaculos = Math.floor(Math.random() * 10);
+
+    // Inicialización de los raycasters usados para detectar colisiones frontales
+    this.raycasterFrontal = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, 0, 1 ), 0, 3 );
+    this.raycasterVictoria = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, -1, 0 ), 0, 100 );
+
+    var menu = document.getElementById("menu");
+    menu.style.display = "none";
+    var vidas = document.getElementById("vidas");
+    vidas.style.display = "block";
+
+    this.remove(this.cabeza);
+
+    this.listaObstaculos = [];
+    this.listaPowerUps = [];
+
+    // GENERAR LOS OBSTACULOS NO ALEATORIZADOS (Perdon por el tochaco de codigo)
+    // PASO 1
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 11;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 500;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 650;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -10;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 725;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 900;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -11;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 975;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    // Paso 2
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -11;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 1800;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 1800;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 10;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 1950;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 1950;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 10;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 2150;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -11;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 2150;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 2250;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 2250;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+
+    // PASO 3
+    this.obstaculo = new MyPowerUp();
+    this.obstaculo.position.x = 33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 3050;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaPowerUps.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -10;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 3050;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = 11;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 3050;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    this.obstaculo = new MyObstaculo();
+    this.obstaculo.position.x = -33;
+    this.obstaculo.position.y = 3;
+    this.obstaculo.position.z = 3050;
+    this.nodoDesplazado.add (this.obstaculo);
+    this.listaObstaculos.push(this.obstaculo);
+    //////
+
+    this.createGround(14);
+    this.generateJugador();
+    this.generateMontania(14);
+    this.createBackGround ();
+    console.log("iniciado");
+    this.tiempoInicioNivel = Date.now();
+
+   this.sinErrores1 = true;
+   this.sinErrores2 = true;
+   this.sinErrores3 = true;
+
+
+   var imagentuto = document.getElementById("imagentutorial");
+   imagentuto.src = "../imgs/tutorial1.png";
+   var textotuto = document.getElementById("textotutorial");
+   textotuto.style.display = "block";
+
+  }
+
+  limpiarMenu(){
+    this.remove(this.nodoDesplazado);
+    this.remove(this.backGround);
   }
 
   resetearJuego(){
@@ -137,6 +315,7 @@ class MyScene extends THREE.Scene {
   generateJugador(){
 
     this.motoJugador = new MyJugador();
+    this.motoJugador.position.x = -10;
     this.motoJugador.position.y = 3.8;
     this.motoJugador.position.z = -220;
 
@@ -202,7 +381,7 @@ class MyScene extends THREE.Scene {
 
       } else { // Generar obstáculo doble (dos obstáculos en la misma altura)
          // Crear obstáculo doble
-         console.log("Se va a generar un obstaculo doble");
+         //console.log("Se va a generar un obstaculo doble");
          this.obstaculo1 = new MyObstaculo();
          this.obstaculo2 = new MyObstaculo();
 
@@ -213,7 +392,7 @@ class MyScene extends THREE.Scene {
 
          // Determinar posicion X
          var numeroCarril = Math.floor(Math.random() * 6 + 1);
-         console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
+         //console.log("Se ha generado un obstaculo en el carril " + numeroCarril);
          switch (numeroCarril) {
             case 1 :
              this.obstaculo1.position.x = 33;
@@ -683,7 +862,91 @@ class MyScene extends THREE.Scene {
       break;
 
       case(MyScene.Tutorial):
+         // Se actualiza el resto del modelo
+         //this.octree.update();
+         this.motoJugador.update();
+         //this.obstaculo.update();
 
+         // Ajustamos el raycaster a la posición actual del jugador para detectar colisiones
+         this.raycasterFrontal.ray.origin.copy(this.motoJugador.position);
+         var intersecciones = this.raycasterFrontal.intersectObjects( this.listaObstaculos, true );
+         var interseccionPowerUp = this.raycasterFrontal.intersectObjects( this.listaPowerUps, true );
+
+         // Tambien ajustamos el raycaster para detectar la meta
+         this.raycasterVictoria.ray.origin.copy(this.motoJugador.position);
+         var interseccionMeta = this.raycasterVictoria.intersectObjects( this.listaMeta, true );
+
+         if (!this.motoJugador.invulnerable) {
+           if (intersecciones.length > 0) {
+             this.comienzoInvulnerable = Date.now();
+             this.motoJugador.hacerMotoInvisible();
+             this.motoJugador.invulnerable = true;
+             if (this.nodoDesplazado.position.z < 0 && this.nodoDesplazado.position.z > -1315) {
+                this.sinErrores1 = false;
+             } else if (this.nodoDesplazado.position.z < -1315 && this.nodoDesplazado.position.z > -2600) {
+                this.sinErrores2 = false;
+             }
+           }
+         }
+         else if (this.motoJugador.invulnerable) {
+            //console.log((Date.now()-this.comienzoInvulnerable)/1000);
+            if((Date.now()-this.comienzoInvulnerable)/1000 >= 3){
+              this.motoJugador.invulnerable = false;
+              this.motoJugador.hacerMotoVisible();
+            }
+         }
+
+         if (!this.motoJugador.vidaCogida) {
+           if (interseccionPowerUp.length > 0) {
+             this.comienzoVida = Date.now();
+             this.motoJugador.vidaCogida = true;
+             var vida4 = document.getElementById("hp4");
+             if(vida4.style.display == "none"){
+               vida4.style.display = "block";
+             }
+             this.sinErrores3 = false;
+           }
+         }
+         else{
+           if((Date.now()-this.comienzoInvulnerable)/1000 >= 2){
+             this.motoJugador.vidaCogida = false;
+         }
+        }
+
+         if (interseccionMeta.length > 0) {
+            //console.log("META");
+            var textotuto = document.getElementById("textotutorial");
+            textotuto.style.display = "none";
+            var vida1 = document.getElementById("victoria");
+            victoria.style.display = "block";
+            this.gameState = MyScene.Victoria;
+            this.tiempoFinNivel = Date.now();
+         }
+
+         this.nodoDesplazado.position.z -= 2.5;
+
+         if (this.nodoDesplazado.position.z < -1315 && !this.sinErrores1) {
+            this.nodoDesplazado.position.z = 0;
+            this.sinErrores1 = true;
+         } else if (this.nodoDesplazado.position.z < -1330) {
+            var textotuto = document.getElementById("imagentutorial");
+            textotuto.src = "../imgs/tutorial2.png";
+         }
+         if (this.nodoDesplazado.position.z < -2550 && !this.sinErrores2) {
+            this.nodoDesplazado.position.z = -1315;
+            this.sinErrores2 = true;
+         } else if (this.nodoDesplazado.position.z < -2555) {
+            var textotuto = document.getElementById("imagentutorial");
+            textotuto.src = "../imgs/tutorial3.png";
+         }
+         if (this.nodoDesplazado.position.z < -3300 && this.sinErrores3) {
+            this.nodoDesplazado.position.z = -2560;
+            this.sinErrores3 = true;
+         }
+         if (this.nodoDesplazado.position.z < -3330) {
+            var textotuto = document.getElementById("imagentutorial");
+            textotuto.src = "../imgs/tutorial4.png";
+         }
       break;
 
     }
