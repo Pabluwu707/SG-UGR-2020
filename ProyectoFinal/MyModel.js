@@ -1,13 +1,8 @@
 
 class MyModel extends THREE.Object3D {
-  constructor(urlObj, urlMat, colorMaterial = 0x000000, opacity = 1) {
+  constructor(urlObj, urlMat, colorMaterial = 0x000000, opacity = 1, colorLinea = 0xFFFFFF) {
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la caja
-    // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    //this.createGUI(gui,titleGui);
-
-    // Esto es una Mickey-herramienta que utilizaremos más adelante
     var clase = this;
 
     // Instanciamos un MTLLoader y OBJLoader
@@ -34,7 +29,7 @@ class MyModel extends THREE.Object3D {
 
                // Líneas de distinto color
                var edges = new THREE.EdgesGeometry( child.geometry );
-               var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+               var line = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: colorLinea } ) );
                line.material.opacity = 0.20;
                line.material.transparent = true;
                clase.add( line );
@@ -66,19 +61,6 @@ class MyModel extends THREE.Object3D {
     this.forward = false;
     this.backward = false;
 
-  }
-
-  createGUI (gui,titleGui) {
-    // Controles
-    this.guiControls = new function () {
-      this.giroContinuo = false;
-    }
-
-    // Se crea una sección para los controles
-    var that = this;
-    var folder = gui.addFolder (titleGui);
-    // Estas lineas son las que añaden los componentes de la interfaz
-    folder.add (this.guiControls, 'giroContinuo').name ('Giro continuo: ').listen();
   }
 
    getMesh() {
