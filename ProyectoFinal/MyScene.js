@@ -131,8 +131,6 @@ class MyScene extends THREE.Scene {
     var vidas = document.getElementById("vidas");
     vidas.style.display = "block";
 
-    this.remove(this.cabeza);
-
     this.listaObstaculos = [];
     this.listaPowerUps = [];
 
@@ -471,8 +469,8 @@ class MyScene extends THREE.Scene {
     var geometryMeta = new THREE.BoxGeometry (200,1,200);
 
     // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('./carretera.png');
-    var textureMeta = new THREE.TextureLoader().load('./carretera.png');
+    var texture = new THREE.TextureLoader().load('../imgs/carretera.png');
+    var textureMeta = new THREE.TextureLoader().load('../imgs/carretera.png');
 
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
     var materialMeta= new THREE.MeshPhongMaterial ({map: textureMeta});
@@ -530,7 +528,7 @@ class MyScene extends THREE.Scene {
     var geometryBackGround = new THREE.BoxGeometry (1412,450,1);
 
     // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('./fondo.jpg');
+    var texture = new THREE.TextureLoader().load('../imgs/fondo.jpg');
     var materialBackGround = new THREE.MeshPhongMaterial ({map: texture});
 
     // Ya se puede construir el Mesh
