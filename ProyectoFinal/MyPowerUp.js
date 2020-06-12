@@ -4,18 +4,18 @@ class MyPowerUp extends THREE.Object3D {
     super();
 
     // Creamos los modelos
-    this.palmera = new MyModel("../models/palmera.obj","../models/palmera.mtl");
-    this.bola = new MyModel("../models/bola.obj","../models/bola.mtl", 0xFF6C11, 0.2);
+    var palmera = new MyModel("../models/palmera.obj","../models/palmera.mtl");
+    var bola = new MyModel("../models/bola.obj","../models/bola.mtl", 0xFF6C11, 0.2);
 
-    this.bola.scale.set(6,6,6);
-    this.palmera.scale.set(0.7,0.7,0.7);
-    this.palmera.position.x = -4;
-    this.palmera.position.y = 1.5;
-    this.palmera.position.z = 1;
+    bola.scale.set(6,6,6);
+    palmera.scale.set(0.7,0.7,0.7);
+    palmera.position.x = -4;
+    palmera.position.y = 1.5;
+    palmera.position.z = 1;
 
     // Los añadimos a la escena
-    this.add (this.palmera);
-    this.add (this.bola);
+    this.add (palmera);
+    this.add (bola);
   }
 
 
@@ -24,7 +24,7 @@ class MyPowerUp extends THREE.Object3D {
   }
 
   getMesh() {
-     return this.mesh;
+     return this;
   }
 
   update () {

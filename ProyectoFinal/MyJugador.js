@@ -16,6 +16,7 @@ class MyJugador extends THREE.Object3D {
     this.add (this.partesNegras);
     this.add (this.carroceria);
 
+    // Creamos una luz orientada hacia delante para simular unos faros
     this.spotLight = new THREE.SpotLight( 0xffffff, 0.5, 150 );
     this.spotLight.position.set( 0, 2, 0 );
     this.spotLight.target.position.set( 0, 0, 2 );
@@ -23,6 +24,7 @@ class MyJugador extends THREE.Object3D {
     this.add (this.spotLight);
 
     this.invulnerabilidad = false;
+    this.vidaCogida = false;
 
     this.scale.set(1.5,1.5,1.5);
 
